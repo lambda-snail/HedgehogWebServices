@@ -1,5 +1,7 @@
 ﻿using Hedgehog.Core.Contracts;
+using Hedgehog.Core.Domain.Requests;
 using Hedgehog.UI.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,16 +16,18 @@ namespace Hedgehog.UI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         ITestService _test;
+        private readonly IMediator _mediator;
 
-        public HomeController(ILogger<HomeController> logger, ITestService test)
+        public HomeController(ILogger<HomeController> logger, ITestService test, IMediator mediator)
         {
             _logger = logger;
             _test = test;
+            _mediator = mediator;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            ViewBag.Message = _test.GetMessage();
+            ViewBag.Message = _test.GetMessage() + (await _mediator.Send(new TestServiceRequest())).GetMessage();
             return View();
         }
 

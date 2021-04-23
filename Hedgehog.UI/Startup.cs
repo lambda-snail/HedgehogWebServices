@@ -14,8 +14,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using MediatR.Extensions.Autofac.DependencyInjection;
+
 using Hedgehog.UI.Data;
 using Hedgehog.Core;
+using MediatR;
 
 namespace Hedgehog.UI
 {
@@ -48,9 +51,31 @@ namespace Hedgehog.UI
         // Don't build the container; that gets done for you by the factory.
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            // Needed by MediatR for Autofac
+            // https://github.com/jbogard/MediatR/wiki
+            builder
+                .RegisterType<Mediator>()
+                .As<IMediator>()
+                .InstancePerLifetimeScope();
+
+            builder.Register<ServiceFactory>(context =>
+            {
+                var c = context.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+
+            // End MediatR related stuff
+
+            // Register domain things and MediatR requests and handlers using assembly scanning
+
             builder.RegisterAssemblyTypes(Assembly.Load("Hedgehog.Core"))
-                   .As(t => t.GetInterfaces().FirstOrDefault( i => i.Name == "I" + t.Name ))
+                   //.As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name))
+                   .AsImplementedInterfaces()
                    .InstancePerLifetimeScope(); // One instance per HTTP request in Autofac
+
+            builder.RegisterAssemblyTypes(Assembly.Load("Hedgehog.Infrastructure"))
+                   .AsImplementedInterfaces()
+                   .InstancePerLifetimeScope();
 
             // Note: Not all dependencies should be InstancePerLifetimeScope()
             // https://autofaccn.readthedocs.io/en/latest/lifetime/instance-scope.html

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hedgehog.UI", "Hedgehog.UI\Hedgehog.UI.csproj", "{99281998-3C61-4A86-9633-0768176712E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hedgehog.Core", "Hedgehog.Core\Hedgehog.Core.csproj", "{36A6EFFC-CFEC-452E-BD8F-29BF07FCC79C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hedgehog.Core", "Hedgehog.Core\Hedgehog.Core.csproj", "{36A6EFFC-CFEC-452E-BD8F-29BF07FCC79C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hedgehog.Infrastructure", "Hedgehog.Infrastructure\Hedgehog.Infrastructure.csproj", "{32CEE44B-48A8-4856-AF08-ED57C83201BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{36A6EFFC-CFEC-452E-BD8F-29BF07FCC79C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36A6EFFC-CFEC-452E-BD8F-29BF07FCC79C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36A6EFFC-CFEC-452E-BD8F-29BF07FCC79C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32CEE44B-48A8-4856-AF08-ED57C83201BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32CEE44B-48A8-4856-AF08-ED57C83201BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32CEE44B-48A8-4856-AF08-ED57C83201BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32CEE44B-48A8-4856-AF08-ED57C83201BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

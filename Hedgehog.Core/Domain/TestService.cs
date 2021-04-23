@@ -4,9 +4,14 @@ namespace Hedgehog.Core.Domain
 {
     public class TestService : ITestService
     {
+        string _msg;
+        public TestService(string msg = "Hello Dependency Injection World!")
+        {
+            _msg = msg;
+        }
         public string GetMessage()
         {
-            return "Hello Dependency Injection World!";
+            return _msg;
         }
     }
 }
