@@ -4,8 +4,13 @@ using Hedgehog.Core.Domain;
 
 namespace Hedgehog.Infrastructure.DataAccess
 {
-    class TestRepository : ITestRepository
+    public class TestRepository : ITestRepository
     {
+        public TestRepository()
+        {
+
+        }
+
         public ITestService GetTestService(string msg = null)
         {
             return new TestService(msg);

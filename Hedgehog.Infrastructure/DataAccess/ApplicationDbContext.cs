@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Hedgehog.UI.Data
+namespace Hedgehog.Infrastructure.DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {

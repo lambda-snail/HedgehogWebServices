@@ -16,10 +16,10 @@ using System.Threading.Tasks;
 
 using MediatR.Extensions.Autofac.DependencyInjection;
 
-using Hedgehog.UI.Data;
 using Hedgehog.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Hedgehog.Infrastructure.DataAccess;
 
 namespace Hedgehog.UI
 {
@@ -36,6 +36,8 @@ namespace Hedgehog.UI
         // called by the runtime before the ConfigureContainer method, below.
         public void ConfigureServices(IServiceCollection services)
         {
+            Infrastructure.DataAccess.TestRepository x;
+
             services.AddControllersWithViews();
 
             services.AddDbContext<ApplicationDbContext>(options =>

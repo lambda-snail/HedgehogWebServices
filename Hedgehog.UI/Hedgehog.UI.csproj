@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Hedgehog.Infrastructure\Hedgehog.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 </Project>
