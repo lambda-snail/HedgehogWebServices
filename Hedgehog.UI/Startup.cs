@@ -19,6 +19,7 @@ using MediatR.Extensions.Autofac.DependencyInjection;
 using Hedgehog.UI.Data;
 using Hedgehog.Core;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Hedgehog.UI
 {
@@ -35,6 +36,8 @@ namespace Hedgehog.UI
         // called by the runtime before the ConfigureContainer method, below.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -43,6 +46,9 @@ namespace Hedgehog.UI
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie("hedgehog-session-id");
         }
 
         // ConfigureContainer is where you can register things directly
@@ -67,7 +73,8 @@ namespace Hedgehog.UI
             // End MediatR related stuff
 
             // Register domain things and MediatR requests and handlers using assembly scanning
-
+            // Note: Not all dependencies should be InstancePerLifetimeScope()
+            // https://autofaccn.readthedocs.io/en/latest/lifetime/instance-scope.html
             builder.RegisterAssemblyTypes(Assembly.Load("Hedgehog.Core"))
                    //.As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name))
                    .AsImplementedInterfaces()
@@ -76,9 +83,6 @@ namespace Hedgehog.UI
             builder.RegisterAssemblyTypes(Assembly.Load("Hedgehog.Infrastructure"))
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope();
-
-            // Note: Not all dependencies should be InstancePerLifetimeScope()
-            // https://autofaccn.readthedocs.io/en/latest/lifetime/instance-scope.html
         }
 
         // Configure is where you add middleware. This is called after
