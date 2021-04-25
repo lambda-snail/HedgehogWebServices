@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace Hedgehog.UI.Data.Migrations
+namespace Hedgehog.Infrastructure.DataAccess.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
