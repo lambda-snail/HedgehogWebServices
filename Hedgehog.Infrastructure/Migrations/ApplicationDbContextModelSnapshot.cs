@@ -19,7 +19,7 @@ namespace Hedgehog.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Hedgehog.Core.Application.HedgehogUserBase", b =>
+            modelBuilder.Entity("Hedgehog.Core.Application.HedgehogUserAccount", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -29,10 +29,6 @@ namespace Hedgehog.Infrastructure.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -86,8 +82,6 @@ namespace Hedgehog.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("HedgehogUserBase");
                 });
 
             modelBuilder.Entity("Hedgehog.Core.Domain.WebStore", b =>
@@ -97,7 +91,7 @@ namespace Hedgehog.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ServiceUserAccountForeignKey")
+                    b.Property<string>("HedgehogUserAccountForeignKey")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StoreTitle")
@@ -105,9 +99,9 @@ namespace Hedgehog.Infrastructure.Migrations
 
                     b.HasKey("WebStoreId");
 
-                    b.HasIndex("ServiceUserAccountForeignKey")
+                    b.HasIndex("HedgehogUserAccountForeignKey")
                         .IsUnique()
-                        .HasFilter("[ServiceUserAccountForeignKey] IS NOT NULL");
+                        .HasFilter("[HedgehogUserAccountForeignKey] IS NOT NULL");
 
                     b.ToTable("WebStore");
                 });
@@ -247,22 +241,11 @@ namespace Hedgehog.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Hedgehog.Core.Application.ServiceUserAccount", b =>
-                {
-                    b.HasBaseType("Hedgehog.Core.Application.HedgehogUserBase");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)");
-
-                    b.HasDiscriminator().HasValue("ServiceUserAccount");
-                });
-
             modelBuilder.Entity("Hedgehog.Core.Domain.WebStore", b =>
                 {
-                    b.HasOne("Hedgehog.Core.Application.ServiceUserAccount", "Owner")
+                    b.HasOne("Hedgehog.Core.Application.HedgehogUserAccount", "Owner")
                         .WithOne("WebStore")
-                        .HasForeignKey("Hedgehog.Core.Domain.WebStore", "ServiceUserAccountForeignKey");
+                        .HasForeignKey("Hedgehog.Core.Domain.WebStore", "HedgehogUserAccountForeignKey");
 
                     b.Navigation("Owner");
                 });
@@ -278,7 +261,7 @@ namespace Hedgehog.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Hedgehog.Core.Application.HedgehogUserBase", null)
+                    b.HasOne("Hedgehog.Core.Application.HedgehogUserAccount", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -287,7 +270,7 @@ namespace Hedgehog.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Hedgehog.Core.Application.HedgehogUserBase", null)
+                    b.HasOne("Hedgehog.Core.Application.HedgehogUserAccount", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -302,7 +285,7 @@ namespace Hedgehog.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hedgehog.Core.Application.HedgehogUserBase", null)
+                    b.HasOne("Hedgehog.Core.Application.HedgehogUserAccount", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -311,14 +294,14 @@ namespace Hedgehog.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Hedgehog.Core.Application.HedgehogUserBase", null)
+                    b.HasOne("Hedgehog.Core.Application.HedgehogUserAccount", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Hedgehog.Core.Application.ServiceUserAccount", b =>
+            modelBuilder.Entity("Hedgehog.Core.Application.HedgehogUserAccount", b =>
                 {
                     b.Navigation("WebStore");
                 });

@@ -15,8 +15,8 @@ namespace Hedgehog.Core.Domain
         public int WebStoreId { get; set; }
         public string StoreTitle { get; set; }
 
-        public string ServiceUserAccountForeignKey { get; set; }
-        public ServiceUserAccount Owner { get; set; }
+        public string HedgehogUserAccountForeignKey { get; set; }
+        public HedgehogUserAccount Owner { get; set; }
 
         //public Dictionary<Guid, CustomerAccount> Customers { get; set; }
     }
