@@ -36,9 +36,9 @@ namespace Hedgehog.UI
         // called by the runtime before the ConfigureContainer method, below.
         public void ConfigureServices(IServiceCollection services)
         {
-            Infrastructure.DataAccess.TestRepository x;
-
             services.AddControllersWithViews();
+
+            services.AddMvc();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
