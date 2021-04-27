@@ -8,6 +8,8 @@ namespace Hedgehog.Infrastructure.DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext<HedgehogUserAccount>
     {
+        public DbSet<WebStore> WebStores;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -22,6 +24,12 @@ namespace Hedgehog.Infrastructure.DataAccess
                 {
                     //entityBuilder.Property(account => account.CompanyName).HasColumnType("nvarchar(128)");//.IsRequired();
                     entityBuilder.HasOne(account => account.WebStore).WithOne(store => store.Owner).HasForeignKey<WebStore>(store => store.HedgehogUserAccountForeignKey);
+                });
+
+            modelBuilder.Entity<WebStore>(
+                entityBuilder =>
+                {
+                    entityBuilder.HasIndex(store => store.NavigationTitle).IsUnique();
                 });
         }
     }
