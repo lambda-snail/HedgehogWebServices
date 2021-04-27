@@ -50,6 +50,8 @@ namespace Hedgehog.UI
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
+            services.AddHttpContextAccessor();
+
             //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             //        .AddCookie("hedgehog-session-id");
         }
@@ -114,6 +116,9 @@ namespace Hedgehog.UI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "userstore",
+                    pattern: "{storeNavigationTitle}/{controller=Store}/{action=Index}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
