@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Hedgehog.Core.Domain.Requests;
 using Hedgehog.Core.Domain;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Hedgehog.UI.Controllers
 {
@@ -21,8 +23,10 @@ namespace Hedgehog.UI.Controllers
         public async Task<IActionResult> Index(string storeNavigationTitle)
         {
             WebStore store =  await _mediator.Send( new GetStoreFromNavigationTitleRequest { NavigationTitle = storeNavigationTitle } );
+            IEnumerable<Product> products = await _mediator.Send( new GetProductsFromStoreRequest { StoreId = store.WebStoreId } );
             ViewBag.Message = store.StoreTitle;
-            return View();
+            ViewBag.NumItems = products.Count();
+            return View(products);
         }
     }
 }

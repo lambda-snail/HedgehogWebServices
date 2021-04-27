@@ -76,3 +76,14 @@ body {
     border: solid 1px black;
     border-radius: 5px;
 }
+
+.product-card {
+    border-radius: 5px;
+    align-content: center;
+}
+
+.product-card > img {
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+}

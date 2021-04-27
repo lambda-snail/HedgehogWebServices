@@ -17,7 +17,7 @@ namespace Hedgehog.Core.Domain.Commands
     public class GetStoreFromNavigationTitleRequestHandler :
         IRequestHandler<GetStoreFromNavigationTitleRequest, WebStore>
     {
-        private IWebStoreRepository _webStoreRpository;
+        private readonly IWebStoreRepository _webStoreRpository;
         public GetStoreFromNavigationTitleRequestHandler(IWebStoreRepository webStoreRpository)
         {
             _webStoreRpository = webStoreRpository;
