@@ -9,7 +9,7 @@ namespace Hedgehog.Infrastructure.DataAccess
     public class ApplicationDbContext : IdentityDbContext<HedgehogUserAccount>
     {
         public DbSet<WebStore> WebStores;
-
+        public DbSet<Product> Products;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -30,6 +30,15 @@ namespace Hedgehog.Infrastructure.DataAccess
                 entityBuilder =>
                 {
                     entityBuilder.HasIndex(store => store.NavigationTitle).IsUnique();
+                });
+
+            modelBuilder.Entity<Product>(
+                entityBuilder =>
+                {
+                    entityBuilder.Property(product => product.ProductName).HasColumnType("nvarchar(256)");
+                    entityBuilder.Property(product => product.ShortDescription).HasColumnType("nvarchar(1024)");
+                    entityBuilder.Property(product => product.LongDescription).HasColumnType("nvarchar(max)");
+                    entityBuilder.Property(product => product.ImageUrl).HasColumnType("nvarchar(1024)");
                 });
         }
     }
