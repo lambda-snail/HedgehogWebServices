@@ -16,10 +16,11 @@ using System.Threading.Tasks;
 
 using MediatR.Extensions.Autofac.DependencyInjection;
 
-using Hedgehog.UI.Data;
 using Hedgehog.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Hedgehog.Infrastructure.DataAccess;
+using Hedgehog.Core.Application;
 
 namespace Hedgehog.UI
 {
@@ -38,17 +39,21 @@ namespace Hedgehog.UI
         {
             services.AddControllersWithViews();
 
+            services.AddMvc();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<HedgehogUserAccount>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddCookie("hedgehog-session-id");
+            services.AddHttpContextAccessor();
+
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //        .AddCookie("hedgehog-session-id");
         }
 
         // ConfigureContainer is where you can register things directly
@@ -113,7 +118,10 @@ namespace Hedgehog.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}");
+                endpoints.MapControllerRoute(
+                    name: "userstore",
+                    pattern: "{storeNavigationTitle}/{controller=Store}/{action=Index}");
                 endpoints.MapRazorPages();
             });
         }
