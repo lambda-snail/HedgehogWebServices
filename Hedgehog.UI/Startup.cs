@@ -117,11 +117,11 @@ namespace Hedgehog.UI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}");
+                endpoints.MapControllerRoute(
                     name: "userstore",
                     pattern: "{storeNavigationTitle}/{controller=Store}/{action=Index}");
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

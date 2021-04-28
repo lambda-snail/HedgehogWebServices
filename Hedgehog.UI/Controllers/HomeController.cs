@@ -15,15 +15,13 @@ namespace Hedgehog.UI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        ITestService _test;
         private readonly IMediator _mediator;
 
         public IHttpContextAccessor HttpContextAccessor { get; }
 
-        public HomeController(ILogger<HomeController> logger, ITestService test, IMediator mediator, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, IMediator mediator, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
-            _test = test;
             _mediator = mediator;
             HttpContextAccessor = httpContextAccessor;
         }

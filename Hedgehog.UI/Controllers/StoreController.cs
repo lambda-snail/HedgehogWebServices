@@ -23,6 +23,12 @@ namespace Hedgehog.UI.Controllers
         public async Task<IActionResult> Index(string storeNavigationTitle)
         {
             WebStore store =  await _mediator.Send( new GetStoreFromNavigationTitleRequest { NavigationTitle = storeNavigationTitle } );
+            
+            if(store == null)
+            {
+                return NotFound();
+            }
+            
             IEnumerable<Product> products = await _mediator.Send( new GetProductsFromStoreRequest { StoreId = store.WebStoreId } );
             ViewBag.Message = store.StoreTitle;
             ViewBag.NumItems = products.Count();

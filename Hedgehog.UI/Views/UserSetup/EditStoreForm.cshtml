@@ -1,0 +1,22 @@
+﻿@model WebStore
+
+<container>
+    <form asp-action="EditStoreForm">
+        <div class="form-row">
+            <div class="form-group col-sm-4">
+                <label asp-for="StoreTitle"></label>
+                <input asp-for="StoreTitle" class="form-control" aria-describedby="title-input" />
+                <small class="form-text text-muted">The title of your store.</small>
+            </div>
+            <div class="form-group col-sm-4">
+                <label asp-for="NavigationTitle"></label>
+                <input asp-for="NavigationTitle" class="form-control" aria-describedby="navigation-title">
+                <small class="form-text text-muted">The url used to find your store.</small>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </form>
+</container>
