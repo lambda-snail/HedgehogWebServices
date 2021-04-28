@@ -11,11 +11,11 @@ namespace Hedgehog.UI.Controllers
     /// <summary>
     /// Handles logic related to store owners changing their data.
     /// </summary>
-    public class UserSetupController : Controller
+    public class UserController : Controller
     {
         private readonly IMediator _mediator;
 
-        public UserSetupController(IMediator mediator)
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -23,6 +23,14 @@ namespace Hedgehog.UI.Controllers
         private string GetIdLoggedInUser()
         {
             return User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
+        [Authorize]
+        [Route("/User/Index")]
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.UserName = User.Identity.Name;
+            return View();
         }
 
         [Authorize]
