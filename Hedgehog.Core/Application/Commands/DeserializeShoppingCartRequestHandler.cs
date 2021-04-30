@@ -10,10 +10,12 @@ namespace Hedgehog.Core.Application.Commands
     public class DeserializeShoppingCartRequestHandler : IRequestHandler<DeserializeShoppingCartRequest, ShoppingCart>
     {
         private readonly ISerializer<ShoppingCart> _serializer;
+        private readonly IMediator _mediator;
 
-        public DeserializeShoppingCartRequestHandler(ISerializer<ShoppingCart> serializer)
+        public DeserializeShoppingCartRequestHandler(ISerializer<ShoppingCart> serializer, IMediator mediator)
         {
             _serializer = serializer;
+            _mediator = mediator;
         }
         public async Task<ShoppingCart> Handle(DeserializeShoppingCartRequest request, CancellationToken cancellationToken)
         {
