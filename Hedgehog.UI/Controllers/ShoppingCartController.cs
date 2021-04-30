@@ -29,6 +29,24 @@ namespace Hedgehog.UI.Controllers
             _cart = cart;
         }
 
+        [Route("{storeNavigationTitle}/ShoppingCart/Index")]
+        public async Task<IActionResult> Index(string storeNavigationTitle)
+        {
+            ISession session = HttpContext.Session;
+            string cartJson = session.GetString(_CartKey);
+            IShoppingCart cart = null;
+            if (!string.IsNullOrEmpty(cartJson))
+            {
+                // There might be a better way than deserializing before adding, but it works for now
+                cart = await _mediator.Send(new DeserializeShoppingCartRequest { Json = cartJson });
+            }
+
+            double total = await cart.CalculateTotal();
+
+            return View(cart);
+        }
+
+        [Route("{storeNavigationTitle}/ShoppingCart/AddToCart")]
         public async Task<IActionResult> AddToCart(string storeNavigationTitle, int productId)
         {
             ISession session = HttpContext.Session;

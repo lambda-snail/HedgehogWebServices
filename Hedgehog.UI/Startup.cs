@@ -91,8 +91,8 @@ namespace Hedgehog.UI
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope(); // One instance per HTTP request in Autofac
 
-
             builder.RegisterType<JsonSerializer<ShoppingCart>>().As<ISerializer<ShoppingCart>>();
+            builder.RegisterType<ShoppingCart>().InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(Assembly.Load("Hedgehog.Infrastructure"))
                    .AsImplementedInterfaces()

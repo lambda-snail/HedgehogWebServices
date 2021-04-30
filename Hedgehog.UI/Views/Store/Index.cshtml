@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <h5 class="card-title">@product.ProductName</h5>
                     <p class="card-text">@product.ShortDescription</p>
-                    <p class="card-text">@product.Price.ToString("F1")</p>
+                    <p class="card-text">@product.Price.ToString("F1") <text>$</text></p>
                     <a class="btn btn-primary"
                        asp-controller="ShoppingCart"
                        asp-action="AddToCart"

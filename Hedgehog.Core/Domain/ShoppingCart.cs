@@ -94,6 +94,11 @@ namespace Hedgehog.Core.Domain
             }
         }
 
+        public async Task<Product> GetProduct(ShoppingCartItem item)
+        {
+            return await _mediator.Send(new GetSingleProductFromStoreRequest { ProductId = item.ProductId });
+        }
+
         public void ClearCart()
         {
             Items = new List<ShoppingCartItem>();
