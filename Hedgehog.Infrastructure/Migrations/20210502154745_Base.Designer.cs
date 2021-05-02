@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hedgehog.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210426201441_Initial-Migration")]
-    partial class InitialMigration
+    [Migration("20210502154745_Base")]
+    partial class Base
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,10 @@ namespace Hedgehog.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("AccountType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -84,6 +88,40 @@ namespace Hedgehog.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("AccountType").HasValue("HedgehogUserAccount");
+                });
+
+            modelBuilder.Entity("Hedgehog.Core.Domain.Product", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<string>("LongDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<int>("WebStoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("WebStoreId");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Hedgehog.Core.Domain.WebStore", b =>
@@ -93,17 +131,24 @@ namespace Hedgehog.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("HedgehogUserAccountForeignKey")
+                    b.Property<string>("NavigationTitle")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StoreTitle")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserAccountId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("WebStoreId");
 
-                    b.HasIndex("HedgehogUserAccountForeignKey")
+                    b.HasIndex("NavigationTitle")
                         .IsUnique()
-                        .HasFilter("[HedgehogUserAccountForeignKey] IS NOT NULL");
+                        .HasFilter("[NavigationTitle] IS NOT NULL");
+
+                    b.HasIndex("UserAccountId")
+                        .IsUnique()
+                        .HasFilter("[UserAccountId] IS NOT NULL");
 
                     b.ToTable("WebStore");
                 });
@@ -186,12 +231,10 @@ namespace Hedgehog.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -228,12 +271,10 @@ namespace Hedgehog.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -243,13 +284,43 @@ namespace Hedgehog.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Hedgehog.Core.Application.CustomerAccount", b =>
+                {
+                    b.HasBaseType("Hedgehog.Core.Application.HedgehogUserAccount");
+
+                    b.Property<int?>("WebStoreId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("WebStoreId");
+
+                    b.HasDiscriminator().HasValue("Customer");
+                });
+
+            modelBuilder.Entity("Hedgehog.Core.Application.UserAccount", b =>
+                {
+                    b.HasBaseType("Hedgehog.Core.Application.HedgehogUserAccount");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
+            modelBuilder.Entity("Hedgehog.Core.Domain.Product", b =>
+                {
+                    b.HasOne("Hedgehog.Core.Domain.WebStore", "WebStore")
+                        .WithMany()
+                        .HasForeignKey("WebStoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WebStore");
+                });
+
             modelBuilder.Entity("Hedgehog.Core.Domain.WebStore", b =>
                 {
-                    b.HasOne("Hedgehog.Core.Application.HedgehogUserAccount", "Owner")
+                    b.HasOne("Hedgehog.Core.Application.UserAccount", "UserAccount")
                         .WithOne("WebStore")
-                        .HasForeignKey("Hedgehog.Core.Domain.WebStore", "HedgehogUserAccountForeignKey");
+                        .HasForeignKey("Hedgehog.Core.Domain.WebStore", "UserAccountId");
 
-                    b.Navigation("Owner");
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -303,7 +374,21 @@ namespace Hedgehog.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Hedgehog.Core.Application.HedgehogUserAccount", b =>
+            modelBuilder.Entity("Hedgehog.Core.Application.CustomerAccount", b =>
+                {
+                    b.HasOne("Hedgehog.Core.Domain.WebStore", "WebStore")
+                        .WithMany("CustomerAccounts")
+                        .HasForeignKey("WebStoreId");
+
+                    b.Navigation("WebStore");
+                });
+
+            modelBuilder.Entity("Hedgehog.Core.Domain.WebStore", b =>
+                {
+                    b.Navigation("CustomerAccounts");
+                });
+
+            modelBuilder.Entity("Hedgehog.Core.Application.UserAccount", b =>
                 {
                     b.Navigation("WebStore");
                 });

@@ -21,12 +21,14 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<HedgehogUserAccount> _signInManager;
+        //private readonly UserManager<UserAccount> _userManager;
         private readonly UserManager<HedgehogUserAccount> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+            //UserManager<UserAccount> userManager,
             UserManager<HedgehogUserAccount> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<HedgehogUserAccount> signInManager,
@@ -78,7 +80,7 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new HedgehogUserAccount { UserName = Input.Email, Email = Input.Email };
+                var user = new UserAccount { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

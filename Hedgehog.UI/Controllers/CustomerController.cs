@@ -20,13 +20,13 @@ namespace Hedgehog.UI.Views.Store
     public class CustomerController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly UserManager<HedgehogUserAccount> _userManager;
+        private readonly UserManager<CustomerAccount> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<HedgehogUserAccount> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public CustomerController(IMediator mediator,
-                                  UserManager<HedgehogUserAccount> userManager,
+                                  UserManager<CustomerAccount> userManager,
                                   RoleManager<IdentityRole> roleManager,
                                   SignInManager<HedgehogUserAccount> signInManager,
                                   IEmailSender emailSender)
@@ -58,7 +58,7 @@ namespace Hedgehog.UI.Views.Store
 
             if (ModelState.IsValid)
             {
-                HedgehogUserAccount newUser = new();
+                CustomerAccount newUser = new();
                 newUser.Email = registrationData.Email;
                 newUser.UserName = registrationData.Email;
                 newUser.WebStore = store;

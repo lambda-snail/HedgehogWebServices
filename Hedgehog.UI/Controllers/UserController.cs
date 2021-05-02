@@ -17,9 +17,9 @@ namespace Hedgehog.UI.Controllers
     public class UserController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly UserManager<HedgehogUserAccount> _userManager;
+        private readonly UserManager<UserAccount> _userManager;
 
-        public UserController(IMediator mediator, UserManager<HedgehogUserAccount> userManager)
+        public UserController(IMediator mediator, UserManager<UserAccount> userManager)
         {
             _mediator = mediator;
             _userManager = userManager;
@@ -64,13 +64,13 @@ namespace Hedgehog.UI.Controllers
 
             if(ModelState.IsValid)
             {
-                string userId = store.HedgehogUserAccountForeignKey = GetIdLoggedInUser();
+                string userId = GetIdLoggedInUser();
                 WebStore storeToSave = await _mediator.Send(new GetStoreFromUserIdRequest { UserId = userId });
 
                 if(storeToSave == null) // Newly registered user
                 {
                     storeToSave = store;
-                    storeToSave.HedgehogUserAccountForeignKey = userId;
+                    storeToSave.UserAccount = await _userManager.GetUserAsync(User);
                 }
                 else
                 {
