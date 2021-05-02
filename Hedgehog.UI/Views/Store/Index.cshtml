@@ -14,8 +14,13 @@
                 <div class="card-body">
                     <h5 class="card-title">@product.ProductName</h5>
                     <p class="card-text">@product.ShortDescription</p>
-                    <p class="card-text">@product.Price.ToString("F1")</p>
-                    <a href="#" class="btn btn-primary">Add to Cart</a>
+                    <p class="card-text">@product.Price.ToString("F1") <text>$</text></p>
+                    <a class="btn btn-primary"
+                       asp-controller="ShoppingCart"
+                       asp-action="AddToCart"
+                       asp-route-productId="@product.ProductId"
+                       asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])"
+                       >Add to Cart</a>
                 </div>
             </div>
         }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Hedgehog.Infrastructure.DataAccess
 {
-    class ProductRepository : RepositoryBase<ProductRepository, int>, IProductRepository
+    public class ProductRepository : RepositoryBase<Product, int>, IProductRepository
     {
         public ProductRepository(ApplicationDbContext context) : base(context)
         {

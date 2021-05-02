@@ -15,7 +15,7 @@ namespace Hedgehog.Core.Domain
         public string ImageUrl { get; set; }
 
         // Navigation properties
-        public WebStore WebStore { get; private set; }
+        public WebStore WebStore { get; set; }
         public int WebStoreId { get; set; }
     }
 }

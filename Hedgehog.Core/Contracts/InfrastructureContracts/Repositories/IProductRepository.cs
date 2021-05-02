@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Hedgehog.Core.Contracts.InfrastructureContracts.Repositories
 {
-    public interface IProductRepository
+    public interface IProductRepository : IAsyncGenericRepository<Product, int>
     {
         /// <summary>
         /// Returns a collection of all products associated with a given store.

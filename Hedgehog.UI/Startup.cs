@@ -21,6 +21,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Hedgehog.Infrastructure.DataAccess;
 using Hedgehog.Core.Application;
+using Microsoft.AspNetCore.Http;
+using Hedgehog.Core.Domain;
+using Hedgehog.Infrastructure.Services;
+using Hedgehog.Core.Contracts.InfrastructureContracts;
 
 namespace Hedgehog.UI
 {
@@ -48,12 +52,11 @@ namespace Hedgehog.UI
 
             services.AddDefaultIdentity<HedgehogUserAccount>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
 
             services.AddHttpContextAccessor();
+            services.AddSession();
 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //        .AddCookie("hedgehog-session-id");
+            services.AddControllersWithViews();
         }
 
         // ConfigureContainer is where you can register things directly
@@ -74,8 +77,11 @@ namespace Hedgehog.UI
                 var c = context.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
             });
-
             // End MediatR related stuff
+
+            builder.RegisterType<HttpContextAccessor>()
+                   .As<IHttpContextAccessor>()
+                   .SingleInstance();
 
             // Register domain things and MediatR requests and handlers using assembly scanning
             // Note: Not all dependencies should be InstancePerLifetimeScope()
@@ -84,6 +90,9 @@ namespace Hedgehog.UI
                    //.As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name))
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope(); // One instance per HTTP request in Autofac
+
+            builder.RegisterType<JsonSerializer<ShoppingCart>>().As<ISerializer<ShoppingCart>>();
+            builder.RegisterType<ShoppingCart>().InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(Assembly.Load("Hedgehog.Infrastructure"))
                    .AsImplementedInterfaces()
@@ -108,6 +117,7 @@ namespace Hedgehog.UI
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 

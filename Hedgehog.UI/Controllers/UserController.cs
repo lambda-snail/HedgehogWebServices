@@ -1,7 +1,10 @@
-﻿using Hedgehog.Core.Domain;
+﻿using Hedgehog.Core.Application;
+using Hedgehog.Core.Domain;
 using Hedgehog.Core.Domain.Requests;
+using Hedgehog.UI.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,18 +14,28 @@ namespace Hedgehog.UI.Controllers
     /// <summary>
     /// Handles logic related to store owners changing their data.
     /// </summary>
-    public class UserSetupController : Controller
+    public class UserController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly UserManager<HedgehogUserAccount> _userManager;
 
-        public UserSetupController(IMediator mediator)
+        public UserController(IMediator mediator, UserManager<HedgehogUserAccount> userManager)
         {
             _mediator = mediator;
+            _userManager = userManager;
         }
 
         private string GetIdLoggedInUser()
         {
             return User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
+        [Authorize]
+        [Route("/User/Index")]
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.UserName = User.Identity.Name;
+            return View();
         }
 
         [Authorize]
@@ -34,9 +47,6 @@ namespace Hedgehog.UI.Controllers
 
             return View(store);
         }
-
-        // TODO:
-        // USE A VIEW MODEL WITH JUST THE RIGHT DATA AND THEN GET FROM DB, AND UPDATE
 
         [Authorize]
         [Route("/User/Store")]
@@ -76,6 +86,49 @@ namespace Hedgehog.UI.Controllers
             else
             {
                 return View(store);
+            }
+        }
+
+        [Authorize]
+        [Route("/User/Products")]
+        public async Task<IActionResult> AddProductForm()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [Route("/User/Products")]
+        [HttpPost]
+        public async Task<IActionResult> AddProductForm(ProductViewModel product)
+        {
+            if(product.Price < 0)
+            {
+                ModelState.AddModelError("", "Please enter a price that is not negative.");
+            }
+
+            if(ModelState.IsValid)
+            {
+                string userId = GetIdLoggedInUser();
+                WebStore store = await _mediator.Send(new GetStoreFromUserIdRequest { UserId = userId });
+
+                Product newProduct = new Product
+                {
+                    ProductName = product.ProductName,
+                    ShortDescription = product.ShortDescription,
+                    LongDescription = product.LongDescription,
+                    Price = product.Price,
+                    ImageUrl = product.ImageUrl,
+                    WebStore = store,
+                    WebStoreId = store.WebStoreId
+                };
+
+                await _mediator.Send(new AddOrUpdateProductRequest { Product = newProduct });
+
+                return RedirectToAction("ChangesSaved");
+            }
+            else
+            {
+                return View(product);
             }
         }
 
