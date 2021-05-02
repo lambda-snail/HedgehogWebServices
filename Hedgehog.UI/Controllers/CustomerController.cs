@@ -69,7 +69,7 @@ namespace Hedgehog.UI.Views.Store
                     _userManager.AddToRoleAsync(newUser, "Customer").Wait();
 
                     string returnUrl = Url.Content("~/");
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                    var code = "user-token";//await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
