@@ -12,6 +12,11 @@ namespace Hedgehog.Core.Domain
         public string StoreTitle { get; set; }
 
         /// <summary>
+        /// A description of the store, displayed to customers.
+        /// </summary>
+        public string StoreDescription { get; set; }
+
+        /// <summary>
         /// Used when navigating to a store. Must consist of only alphanumerics and no spaces.
         /// </summary>
         public string NavigationTitle { get; set; }

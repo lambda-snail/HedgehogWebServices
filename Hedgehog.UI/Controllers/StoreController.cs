@@ -33,6 +33,7 @@ namespace Hedgehog.UI.Controllers
             
             IEnumerable<Product> products = await _mediator.Send( new GetProductsFromStoreRequest { StoreId = store.WebStoreId } );
             ViewBag.Message = store.StoreTitle;
+            ViewBag.StoreDescription = store.StoreDescription ?? "No description added by the owner yet.";
             ViewBag.NumItems = products.Count();
             return View(products);
         }

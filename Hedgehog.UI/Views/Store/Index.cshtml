@@ -1,12 +1,14 @@
 ﻿@model IEnumerable<Product>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to a user store: @ViewBag.Message</h1>
+    <h1 class="display-4">Welcome to @ViewBag.Message</h1>
+    <h4>@ViewBag.StoreDescription</h4>
     <p>This store currently has @ViewBag.NumItems products in the inventory.</p>
 </div>
 
 <container>
     <div class="row row-cols-4 justify-content-start offset-1">
+
         @foreach (Product product in Model)
         {
             <div class="card product-card m-4 p-1" style="width: 12rem;">

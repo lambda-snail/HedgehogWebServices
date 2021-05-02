@@ -48,7 +48,7 @@ namespace Hedgehog.UI.Controllers
             WebStoreViewModel storeVm = new();
             storeVm.StoreTitle = store.StoreTitle;
             storeVm.NavigationTitle = store.NavigationTitle;
-            //storeVm.StoreDescription
+            storeVm.StoreDescription = store.StoreDescription;
 
             return View(storeVm);
         }
@@ -72,7 +72,7 @@ namespace Hedgehog.UI.Controllers
                 
                 storeToSave.NavigationTitle = storeVm.NavigationTitle;
                 storeToSave.StoreTitle = storeVm.StoreTitle;
-                //storeToSave.StoreDescription = storeVm.StoreDescription;
+                storeToSave.StoreDescription = storeVm.StoreDescription;
 
                 await _mediator.Send( new AddOrUpdateStoreRequest { Store = storeToSave } );
 
