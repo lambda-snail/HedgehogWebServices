@@ -25,9 +25,13 @@ using Microsoft.AspNetCore.Http;
 using Hedgehog.Core.Domain;
 using Hedgehog.Infrastructure.Services;
 using Hedgehog.Core.Contracts.InfrastructureContracts;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Hedgehog.UI
 {
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -55,6 +59,26 @@ namespace Hedgehog.UI
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
+            services.AddIdentityCore<UserAccount>(
+                    //options => {
+                    //    options.Tokens.ProviderMap.Add("xxx", new TokenProviderDescriptor(typeof(IUserTwoFactorTokenProvider<UserAccount>)));
+                    //})
+                    options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    //.AddDefaultTokenProviders()
+                    //.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<UserAccount>))
+                    .AddTokenProvider<EmailTokenProvider<UserAccount>>(TokenOptions.DefaultEmailProvider)
+                    //.AddTokenProvider<EmailTokenProvider<UserAccount>>("xxx")
+                    .AddDefaultUI();
+
+            services.AddIdentityCore<CustomerAccount>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    //.AddDefaultTokenProviders()
+                    .AddTokenProvider<EmailTokenProvider<CustomerAccount>>(TokenOptions.DefaultEmailProvider)
+                    .AddDefaultUI();
+
             services.AddHttpContextAccessor();
             services.AddSession();
 
@@ -80,6 +104,12 @@ namespace Hedgehog.UI
                 return t => c.Resolve(t);
             });
             // End MediatR related stuff
+
+            //builder.RegisterType<UserManager<UserAccount>>().InstancePerLifetimeScope();
+            //builder.RegisterType<UserManager<CustomerAccount>>().InstancePerLifetimeScope();
+            //builder.RegisterType<SignInManager<UserAccount>>().InstancePerLifetimeScope();
+            //builder.RegisterType<SignInManager<CustomerAccount>>().InstancePerLifetimeScope();
+
 
             builder.RegisterType<HttpContextAccessor>()
                    .As<IHttpContextAccessor>()
@@ -138,4 +168,9 @@ namespace Hedgehog.UI
             });
         }
     }
+
+    //public class X : IUserTwoFactorTokenProvider
+    //{
+
+    //}
 }
