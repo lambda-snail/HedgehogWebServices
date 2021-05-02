@@ -19,8 +19,13 @@
                        asp-controller="ShoppingCart"
                        asp-action="AddToCart"
                        asp-route-productId="@product.ProductId"
-                       asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])"
-                       >Add to Cart</a>
+                       asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])">Add to Cart</a>
+
+                    <a class="btn btn-primary"
+                       asp-controller="Store"
+                       asp-action="Details"
+                       asp-route-productId="@product.ProductId"
+                       asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])">Details</a>
                 </div>
             </div>
         }

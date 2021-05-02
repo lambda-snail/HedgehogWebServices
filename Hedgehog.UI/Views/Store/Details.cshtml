@@ -1,0 +1,23 @@
+﻿@model ProductViewModel
+
+<container>
+    <div class="row">
+        <div class="offset-2">
+            <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.ShortDescription">
+        </div>
+        <div>
+            <h2>@Model.ProductName</h2>
+            <h4>@Model.ShortDescription</h4>
+            <p>@Model.LongDescription</p>
+            <p>@Model.Price $</p>
+        </div>
+
+        <a class="btn btn-primary"
+           asp-controller="ShoppingCart"
+           asp-action="AddToCart"
+           asp-route-productId="@ViewBag.ProductId"
+           asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])">Add to Cart</a>
+
+        <a class="btn btn-primary" href="javascript:void(0);" onclick="history.go(-1);">Return</a>
+    </div>
+</container>
