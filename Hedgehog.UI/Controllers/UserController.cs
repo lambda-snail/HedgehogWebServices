@@ -30,7 +30,7 @@ namespace Hedgehog.UI.Controllers
             return User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Index")]
         public async Task<IActionResult> Index()
         {
@@ -38,7 +38,7 @@ namespace Hedgehog.UI.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Store")]
         public async Task<IActionResult> EditStoreForm()
         {
@@ -48,7 +48,7 @@ namespace Hedgehog.UI.Controllers
             return View(store);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Store")]
         [HttpPost]
         public async  Task<IActionResult> EditStoreForm(WebStore store)
@@ -89,14 +89,14 @@ namespace Hedgehog.UI.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Products")]
         public async Task<IActionResult> AddProductForm()
         {
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Products")]
         [HttpPost]
         public async Task<IActionResult> AddProductForm(ProductViewModel product)
@@ -133,7 +133,7 @@ namespace Hedgehog.UI.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Confirmed")]
         public IActionResult ChangesSaved()
         {

@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Hedgehog.UI.Controllers
 {
+    /// <summary>
+    /// The controlelr that manages the default screen presented when navigating to the base url.
+    /// </summary>
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -26,13 +29,9 @@ namespace Hedgehog.UI.Controllers
             HttpContextAccessor = httpContextAccessor;
         }
 
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var x = HttpContextAccessor.HttpContext;
-            var y = x.User;
-            var userId = y.FindFirst(ClaimTypes.Email).Value;
-            ViewBag.Message = "User Id: " + userId;
             return View();
         }
 

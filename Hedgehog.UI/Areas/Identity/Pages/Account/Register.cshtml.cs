@@ -22,16 +22,19 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<HedgehogUserAccount> _signInManager;
         private readonly UserManager<HedgehogUserAccount> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<HedgehogUserAccount> userManager,
+            RoleManager<IdentityRole> roleManager,
             SignInManager<HedgehogUserAccount> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
@@ -77,9 +80,12 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
             {
                 var user = new HedgehogUserAccount { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    _userManager.AddToRoleAsync(user, "User").Wait();
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
