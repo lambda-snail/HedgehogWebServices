@@ -20,18 +20,16 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<HedgehogUserAccount> _signInManager;
-        //private readonly UserManager<UserAccount> _userManager;
-        private readonly UserManager<HedgehogUserAccount> _userManager;
+        private readonly SignInManager<UserAccount> _signInManager;
+        private readonly UserManager<UserAccount> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            //UserManager<UserAccount> userManager,
-            UserManager<HedgehogUserAccount> userManager,
+            UserManager<UserAccount> userManager,
             RoleManager<IdentityRole> roleManager,
-            SignInManager<HedgehogUserAccount> signInManager,
+            SignInManager<UserAccount> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -89,7 +87,7 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
 
                     _userManager.AddToRoleAsync(user, "User").Wait();
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var code = "testtoken";//await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
