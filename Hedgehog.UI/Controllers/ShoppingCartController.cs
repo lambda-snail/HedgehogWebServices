@@ -53,13 +53,13 @@ namespace Hedgehog.UI.Controllers
             string cartJson = session.GetString(_CartKey);
 
             IShoppingCart cart = null;
-            if (! string.IsNullOrEmpty(cartJson))
+            if (!string.IsNullOrEmpty(cartJson))
             {
                 // There might be a better way than deserializing before adding, but it works for now
                 cart = await _mediator.Send(new DeserializeShoppingCartRequest { Json = cartJson });
             }
 
-            if(cart == null)
+            if (cart == null)
             {
                 cart = _cart;
                 WebStore store = await _mediator.Send(new GetStoreFromNavigationTitleRequest { NavigationTitle = storeNavigationTitle });
@@ -70,6 +70,29 @@ namespace Hedgehog.UI.Controllers
             cartJson = await _mediator.Send(new SerializeShoppingCartRequest { Cart = (ShoppingCart)cart });
             session.SetString(_CartKey, cartJson);
 
+            return View();
+        }
+
+        [Route("{storeNavigationTitle}/ShoppingCart/CheckoutAddressForm")]
+        public async Task<IActionResult> CheckoutAddressForm(string storeNavigationTitle)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("{storeNavigationTitle}/ShoppingCart/CheckoutAddressForm")]
+        public async Task<IActionResult> CheckoutAddressForm(string storeNavigationTitle, AddressViewModel addressVm)
+        {
+            if(ModelState.IsValid)
+            {
+                return RedirectToAction("CheckoutPaymentForm", new { storeNavigationTitle= storeNavigationTitle });
+            }
+
+            return View(addressVm);
+        }
+
+        public async Task<IActionResult> CheckoutPaymentForm(string storeNavigationTitle)
+        {
             return View();
         }
     }

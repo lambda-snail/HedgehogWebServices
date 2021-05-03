@@ -11,6 +11,10 @@ namespace Hedgehog.Infrastructure.DataAccess
     {
         public DbSet<WebStore> WebStores;
         public DbSet<Product> Products;
+        public DbSet<Order> Orders;
+        public DbSet<OrderItem> OrderItems;
+        public DbSet<Address> Addresses;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -60,6 +64,42 @@ namespace Hedgehog.Infrastructure.DataAccess
                     entityBuilder.Property(product => product.ShortDescription).HasColumnType("nvarchar(1024)");
                     entityBuilder.Property(product => product.LongDescription).HasColumnType("nvarchar(max)");
                     entityBuilder.Property(product => product.ImageUrl).HasColumnType("nvarchar(1024)");
+                });
+
+            modelBuilder.Entity<OrderItem>(
+                entityBuilder =>
+                {
+                    entityBuilder.Property(oi => oi.ProductName).HasColumnType("nvarchar(256)");
+                    entityBuilder.Property(oi => oi.ProductShortDescription).HasColumnType("nvarchar(1024)");
+                });
+
+            modelBuilder.Entity<Address>(
+                entityBuilder =>
+                {
+                    entityBuilder.Property(a => a.Receiver).HasColumnType("nvarchar(256)");
+                    entityBuilder.Property(a => a.StreetAddress).HasColumnType("nvarchar(256)");
+                    entityBuilder.Property(a => a.City).HasColumnType("nvarchar(256)");
+                    entityBuilder.Property(a => a.Country).HasColumnType("nvarchar(256)");
+                    entityBuilder.Property(a => a.ZipCode).HasColumnType("nvarchar(256)");
+                });
+        }
+
+        private void SeedRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER",
+                    Id = "1"
+                });
+
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER",
+                    Id = "2"
                 });
         }
     }

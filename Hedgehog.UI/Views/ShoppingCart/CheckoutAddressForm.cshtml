@@ -1,0 +1,49 @@
+﻿@model AddressViewModel
+
+    <h3>Please fill out your shipping destination before proceeding to the payment screen.</h3>
+
+    <container>
+        <div class="row">
+            <div class="offset-1 col-md-4">
+                <form asp-action="CheckoutAddressForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <label asp-for="Recipient"></label>
+                            <input asp-for="Recipient" class="form-control" aria-describedby="title-input" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <label asp-for="StreetAddress"></label>
+                            <input asp-for="StreetAddress" class="form-control" aria-describedby="navigation-title">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <label asp-for="ZipCode"></label>
+                            <input asp-for="ZipCode" class="form-control" aria-describedby="navigation-title">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <label asp-for="City"></label>
+                            <input asp-for="City" class="form-control" aria-describedby="navigation-title">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <label asp-for="Country"></label>
+                            <input asp-for="Country" class="form-control" aria-describedby="navigation-title">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+        </div>
+       
+        
+    </container>
