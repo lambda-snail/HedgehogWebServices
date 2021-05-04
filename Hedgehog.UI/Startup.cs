@@ -28,6 +28,7 @@ using Hedgehog.Core.Contracts.InfrastructureContracts;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Hedgehog.UI.IdentityInfrastructure;
 
 namespace Hedgehog.UI
 {
@@ -76,7 +77,8 @@ namespace Hedgehog.UI
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     //.AddDefaultTokenProviders()
-                    .AddTokenProvider<EmailTokenProvider<CustomerAccount>>(TokenOptions.DefaultEmailProvider)
+                    //.AddTokenProvider<HedgehogEmailTwoFactorAuthentication<CustomerAccount>>(TokenOptions.DefaultEmailProvider)
+                    .AddTokenProvider("Default", typeof(HedgehogEmailTwoFactorAuthentication<CustomerAccount>))
                     .AddDefaultUI();
 
             services.AddHttpContextAccessor();
@@ -110,6 +112,9 @@ namespace Hedgehog.UI
             //builder.RegisterType<SignInManager<UserAccount>>().InstancePerLifetimeScope();
             //builder.RegisterType<SignInManager<CustomerAccount>>().InstancePerLifetimeScope();
 
+            builder.RegisterType<HedgehogEmailTwoFactorAuthentication<CustomerAccount>>()
+                    .As<IUserTwoFactorTokenProvider<CustomerAccount>>()
+                    .InstancePerLifetimeScope();
 
             builder.RegisterType<HttpContextAccessor>()
                    .As<IHttpContextAccessor>()

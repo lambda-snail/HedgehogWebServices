@@ -11,6 +11,8 @@ using Hedgehog.Core.Application.Requests;
 using Hedgehog.UI.ViewModels;
 using Hedgehog.Core.Domain;
 using Hedgehog.Core.Domain.Requests;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hedgehog.UI.Controllers
 {
@@ -93,9 +95,16 @@ namespace Hedgehog.UI.Controllers
             return View(addressVm);
         }
 
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CheckoutPaymentForm(string storeNavigationTitle)
         {
-            return View();
+            ShoppingCart cart = await GetCurrentShoppingCartOrNew(storeNavigationTitle);
+            WebStore store = await _mediator.Send(new GetStoreFromUserIdRequest { UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value });
+
+            PaymentSummaryViewModel paymentSummary = new();
+            paymentSummary.TotalAmount = await cart.CalculateTotal();
+
+            return View(paymentSummary);
         }
     }
 }

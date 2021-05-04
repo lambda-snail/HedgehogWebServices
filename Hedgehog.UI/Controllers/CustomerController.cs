@@ -17,6 +17,12 @@ using System.Threading.Tasks;
 
 namespace Hedgehog.UI.Views.Store
 {
+    /// <summary>
+    /// A class for handling login, registration and settings pages of customers.
+    /// 
+    /// Note that the login and registration are adapted from the scaffolded Razor pages. This was done in orde
+    /// to learn how they work, thus there is some duplication going on.
+    /// </summary>
     public class CustomerController : Controller
     {
         private readonly IMediator _mediator;
@@ -64,12 +70,13 @@ namespace Hedgehog.UI.Views.Store
                 newUser.WebStore = store;
 
                 IdentityResult result = _userManager.CreateAsync(newUser, registrationData.Password).Result;
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     _userManager.AddToRoleAsync(newUser, "Customer").Wait();
 
-                    string returnUrl = Url.Content("~/");
-                    var code = "user-token";//await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                    string returnUrl = Url.Content($"~");
+                    //var code = "user-token" + registrationData.Email;//await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
@@ -82,7 +89,7 @@ namespace Hedgehog.UI.Views.Store
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("/RegisterConfirmation", new { email = registrationData.Email, returnUrl = returnUrl });
+                        return RedirectToAction("RegisterConfirmation", new { storeNavigationTitle = storeNavigationTitle, email = registrationData.Email, returnUrl = returnUrl });
                     }
                     else
                     {
@@ -98,6 +105,63 @@ namespace Hedgehog.UI.Views.Store
             }
 
             return View(registrationData);
+        }
+
+        [Route("{storeNavigationTitle}/Customer/RegisterConfirmation")]
+        public async Task<IActionResult> RegisterConfirmation(string storeNavigationTitle, string email, string returnUrl)
+        {
+            RegisterConfirmationViewModel confirmationData = new();
+
+            if (email == null)
+            {
+                return RedirectToAction("Store", "Index", new { storeNavigationTitle= storeNavigationTitle });
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with email '{email}'.");
+            }
+
+            confirmationData.Email = email;
+            // Once you add a real email sender, you should remove this code that lets you confirm the account
+            confirmationData.DisplayConfirmAccountLink = true;
+            if (confirmationData.DisplayConfirmAccountLink)
+            {
+                var userId = await _userManager.GetUserIdAsync(user);
+                //var code = "user-token" + email;//await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                confirmationData.EmailConfirmationUrl = Url.Action(
+                    action: "ConfirmEmail",
+                    controller: "Customer",
+                    values: new { userId = userId, code = code, returnUrl = returnUrl, storeNavigationTitle = storeNavigationTitle },
+                    protocol: Request.Scheme);
+            }
+
+            return View(confirmationData);
+        }
+
+        [Route("{storeNavigationTitle}/Customer/ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string storeNavigationTitle, string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return RedirectToAction("Store", "Index", new { storeNavigationTitle });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{userId}'.");
+            }
+
+            //_userManager.RegisterTokenProvider("Default", new HedgehogEmailTwoFactorAuthentication<CustomerAccount>());
+
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            ViewBag.StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            return View();
         }
     }
 }
