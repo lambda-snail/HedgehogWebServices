@@ -33,7 +33,7 @@ namespace Hedgehog.Infrastructure.DataAccess
             return await _database.Set<E>().ToListAsync();
         }
 
-        public virtual async Task<E> GetByIdAsynch(IdType id)
+        public virtual async Task<E> GetByIdAsync(IdType id)
         {
             return await _database.Set<E>().FindAsync(id);
         }

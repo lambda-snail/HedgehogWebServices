@@ -17,7 +17,7 @@ namespace Hedgehog.Core.Domain.Commands
 
         public async Task<Product> Handle(GetSingleProductFromStoreRequest request, CancellationToken cancellationToken)
         {
-            return await _repository.GetByIdAsynch(request.ProductId);
+            return await _repository.GetByIdAsync(request.ProductId);
         }
     }
 }

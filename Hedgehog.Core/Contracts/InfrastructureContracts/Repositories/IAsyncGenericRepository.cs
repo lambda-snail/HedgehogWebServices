@@ -15,7 +15,7 @@ namespace Hedgehog.Core.Contracts.InfrastructureContracts.Repositories
         // CRUD
         Task AddAsync(E entity);
 
-        Task<E> GetByIdAsynch(IdType id);
+        Task<E> GetByIdAsync(IdType id);
         Task<IEnumerable<E>> GetAllAsync();
         /// <summary>
         /// Retreives paged results from the database, with an optional filter specfied.
