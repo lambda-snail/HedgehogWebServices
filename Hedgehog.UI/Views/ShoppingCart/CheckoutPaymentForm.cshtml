@@ -1,1 +1,36 @@
-﻿<h1>Payment complete :)</h1>
+﻿@model PaymentSummaryViewModel
+
+<h1>You are placing an order of @Model.TotalAmount $</h1>
+
+<script src="https://www.paypal.com/sdk/js?client-id=ATPXcjZPYPW7ZjHUdg6l5gVaCXjyflzpzwbTaipwnoqWL30vv-K1AM-lTwlP31KY1HEBvZwg_jwlGZBs">
+</script>
+
+<div id="paypal-button-container"></div>
+
+<script>
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+
+            // This function sets up the details of the transaction, including the amount and line item details.
+            return actions.order.create({
+                purchase_units: [
+                    {
+                        amount: {
+                            description: '@Model.WebStoreName',
+                            value: '@Model.TotalAmount'
+                        }
+                    }
+                ]
+            });
+        },
+
+        // This function captures the funds from the transaction.
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+                // This function shows a transaction success message to your buyer.
+                alert('Transaction completed by ' + details.payer.name.given_name);
+            });
+        }
+
+    }).render('#paypal-button-container');
+</script>
