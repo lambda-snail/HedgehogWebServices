@@ -77,6 +77,7 @@ namespace Hedgehog.UI.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Customer")]
         [Route("{storeNavigationTitle}/ShoppingCart/CheckoutAddressForm")]
         public async Task<IActionResult> CheckoutAddressForm(string storeNavigationTitle)
         {
@@ -84,6 +85,7 @@ namespace Hedgehog.UI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Customer")]
         [Route("{storeNavigationTitle}/ShoppingCart/CheckoutAddressForm")]
         public async Task<IActionResult> CheckoutAddressForm(string storeNavigationTitle, AddressViewModel addressVm)
         {

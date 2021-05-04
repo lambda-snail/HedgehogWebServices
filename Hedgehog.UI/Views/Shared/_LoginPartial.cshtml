@@ -34,7 +34,7 @@
             }
             else
             {
-                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Store", new { storeNavigationTitle = storeNavigationTitle })">
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@($"/{storeNavigationTitle}/Store/Index")">
                     <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                 </form>
             }
@@ -64,7 +64,7 @@
         else
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Index", "Store", new { storeNavigationTitle = storeNavigationTitle })">Login</a>
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@($"/{storeNavigationTitle}/Store/Index")">Login</a>
             </li>
         }
     }
