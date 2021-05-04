@@ -107,11 +107,6 @@ namespace Hedgehog.UI
             });
             // End MediatR related stuff
 
-            //builder.RegisterType<UserManager<UserAccount>>().InstancePerLifetimeScope();
-            //builder.RegisterType<UserManager<CustomerAccount>>().InstancePerLifetimeScope();
-            //builder.RegisterType<SignInManager<UserAccount>>().InstancePerLifetimeScope();
-            //builder.RegisterType<SignInManager<CustomerAccount>>().InstancePerLifetimeScope();
-
             builder.RegisterType<HedgehogEmailTwoFactorAuthentication<CustomerAccount>>()
                     .As<IUserTwoFactorTokenProvider<CustomerAccount>>()
                     .InstancePerLifetimeScope();
@@ -173,9 +168,4 @@ namespace Hedgehog.UI
             });
         }
     }
-
-    //public class X : IUserTwoFactorTokenProvider
-    //{
-
-    //}
 }
