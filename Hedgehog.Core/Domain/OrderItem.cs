@@ -26,6 +26,6 @@ namespace Hedgehog.Core.Domain
 
         public string ProductName { get; set; }
         public string ProductShortDescription { get; set; }
-        public int ProductPrice { get; set; }
+        public double ProductPrice { get; set; }
     }
 }

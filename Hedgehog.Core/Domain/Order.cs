@@ -23,5 +23,15 @@ namespace Hedgehog.Core.Domain
         {
             return FinalizedTime == null;
         }
+
+        public double GetOrderTotal()
+        {
+            double total = 0d;
+            foreach(var item in OrderItems)
+            {
+                total += item.Amount * item.ProductPrice;
+            }
+            return total;
+        }
     }
 }
