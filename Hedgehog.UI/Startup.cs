@@ -1,38 +1,24 @@
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-
-using MediatR.Extensions.Autofac.DependencyInjection;
-
-using Hedgehog.Core;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Hedgehog.Infrastructure.DataAccess;
 using Hedgehog.Core.Application;
 using Microsoft.AspNetCore.Http;
 using Hedgehog.Core.Domain;
 using Hedgehog.Infrastructure.Services;
 using Hedgehog.Core.Contracts.InfrastructureContracts;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
 using Hedgehog.UI.IdentityInfrastructure;
+using Hedgehog.Core.Application.UserTypes;
 
 namespace Hedgehog.UI
 {
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -61,24 +47,17 @@ namespace Hedgehog.UI
                 .AddDefaultUI();
 
             services.AddIdentityCore<UserAccount>(
-                    //options => {
-                    //    options.Tokens.ProviderMap.Add("xxx", new TokenProviderDescriptor(typeof(IUserTwoFactorTokenProvider<UserAccount>)));
-                    //})
                     options => options.SignIn.RequireConfirmedAccount = true)
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
-                    //.AddDefaultTokenProviders()
-                    //.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<UserAccount>))
                     .AddTokenProvider<EmailTokenProvider<UserAccount>>(TokenOptions.DefaultEmailProvider)
-                    //.AddTokenProvider<EmailTokenProvider<UserAccount>>("xxx")
                     .AddDefaultUI();
 
             services.AddIdentityCore<CustomerAccount>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
-                    //.AddDefaultTokenProviders()
-                    //.AddTokenProvider<HedgehogEmailTwoFactorAuthentication<CustomerAccount>>(TokenOptions.DefaultEmailProvider)
                     .AddTokenProvider("Default", typeof(HedgehogEmailTwoFactorAuthentication<CustomerAccount>))
+                    .AddClaimsPrincipalFactory<CustomerAccountClaimsPrincipalFactory>()
                     .AddDefaultUI();
 
             services.AddHttpContextAccessor();
@@ -123,6 +102,7 @@ namespace Hedgehog.UI
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope(); // One instance per HTTP request in Autofac
 
+            builder.RegisterType<JsonSerializer<Address>>().As<ISerializer<Address>>();
             builder.RegisterType<JsonSerializer<ShoppingCart>>().As<ISerializer<ShoppingCart>>();
             builder.RegisterType<ShoppingCart>().InstancePerLifetimeScope();
 
