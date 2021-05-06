@@ -1,6 +1,51 @@
 ﻿@model PaymentSummaryViewModel
 
-<h1>You are placing an order of @Model.TotalAmount $</h1>
+<h1>Please review your order before choosing a payment option.</h1>
+
+<p>You will be billed by '@Model.WebStoreName' for @Model.Order.GetOrderTotal() $</p>
+
+<h3>Order details</h3>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int row = 1;
+            foreach (var item in Model.Order.OrderItems)
+            {
+
+                <text>
+                    <tr>
+                        <th scope="row">@row</th>
+                        <td>@item.ProductName</td>
+                        <td>@item.Amount</td>
+                        <td>@item.ProductPrice</td>
+                    </tr>
+                </text>
+
+                row++;
+            }
+        }
+</table>
+
+<h3>Shipping address</h3>
+
+<address>
+    @Model.Order.ShippingAddress.Receiver<br />
+    @Model.Order.ShippingAddress.StreetAddress<br />
+    @Model.Order.ShippingAddress.ZipCode, @Model.Order.ShippingAddress.City<br />
+    @Model.Order.ShippingAddress.Country<br />
+</address>
+
+<h3>Payment options</h3>
 
 <script src="https://www.paypal.com/sdk/js?client-id=ATPXcjZPYPW7ZjHUdg6l5gVaCXjyflzpzwbTaipwnoqWL30vv-K1AM-lTwlP31KY1HEBvZwg_jwlGZBs">
 </script>
@@ -17,7 +62,7 @@
                     {
                         amount: {
                             description: '@Model.WebStoreName',
-                            value: '@Model.TotalAmount'
+                            value: '@Model.Order.GetOrderTotal()'
                         }
                     }
                 ]

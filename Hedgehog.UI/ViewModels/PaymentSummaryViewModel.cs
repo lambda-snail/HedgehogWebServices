@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Hedgehog.Core.Domain;
 
 namespace Hedgehog.UI.ViewModels
 {
@@ -11,6 +8,6 @@ namespace Hedgehog.UI.ViewModels
     public class PaymentSummaryViewModel
     {
         public string WebStoreName { get; set; }
-        public double TotalAmount { get; set; }
+        public Order Order { get; set; }
     }
 }
