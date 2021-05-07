@@ -1,58 +1,62 @@
 ﻿@model PaymentSummaryViewModel
 
-<h1>Please review your order before choosing a payment option.</h1>
+<!-- If we somehow (e.g. user presses the "back" button) end up here with a payed order,
+    we don't want to allow a second payment -->
+@if (! Model.Order.IsCompletedTransaction())
+{
+    <h1>Please review your order before choosing a payment option.</h1>
 
-<p>You will be billed by '@Model.WebStoreName' for @Model.Order.GetOrderTotal() $</p>
+    <p>You will be billed by '@Model.WebStoreName' for @Model.Order.GetOrderTotal() $</p>
 
-<h3>Order details</h3>
+    <h3>Order details</h3>
 
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Product Name</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Price</th>
-        </tr>
-    </thead>
-    <tbody>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
 
-        @{
-            int row = 1;
-            foreach (var item in Model.Order.OrderItems)
-            {
+            @{
+                int row = 1;
+                foreach (var item in Model.Order.OrderItems)
+                {
 
-                <text>
-                    <tr>
-                        <th scope="row">@row</th>
-                        <td>@item.ProductName</td>
-                        <td>@item.Amount</td>
-                        <td>@item.ProductPrice</td>
-                    </tr>
-                </text>
+                    <text>
+                        <tr>
+                            <th scope="row">@row</th>
+                            <td>@item.ProductName</td>
+                            <td>@item.Amount</td>
+                            <td>@item.ProductPrice</td>
+                        </tr>
+                    </text>
 
-                row++;
+                    row++;
+                }
             }
-        }
-</table>
+    </table>
 
-<h3>Shipping address</h3>
+    <h3>Shipping address</h3>
 
-<address>
-    @Model.Order.ShippingAddress.Receiver<br />
-    @Model.Order.ShippingAddress.StreetAddress<br />
-    @Model.Order.ShippingAddress.ZipCode, @Model.Order.ShippingAddress.City<br />
-    @Model.Order.ShippingAddress.Country<br />
-</address>
+    <address>
+        @Model.Order.ShippingAddress.Receiver<br />
+        @Model.Order.ShippingAddress.StreetAddress<br />
+        @Model.Order.ShippingAddress.ZipCode, @Model.Order.ShippingAddress.City<br />
+        @Model.Order.ShippingAddress.Country<br />
+    </address>
 
-<h3>Payment options</h3>
+    <h3>Payment options</h3>
 
-<script src="https://www.paypal.com/sdk/js?client-id=ATPXcjZPYPW7ZjHUdg6l5gVaCXjyflzpzwbTaipwnoqWL30vv-K1AM-lTwlP31KY1HEBvZwg_jwlGZBs">
-</script>
+    <script src="https://www.paypal.com/sdk/js?client-id=ATPXcjZPYPW7ZjHUdg6l5gVaCXjyflzpzwbTaipwnoqWL30vv-K1AM-lTwlP31KY1HEBvZwg_jwlGZBs">
+    </script>
 
-<div id="paypal-button-container"></div>
+    <div id="paypal-button-container"></div>
 
-<script>
+    <script>
     paypal.Buttons({
         createOrder: function (data, actions) {
 
@@ -75,11 +79,17 @@
                 // This function shows a transaction success message to your buyer.
                 let payer = details.payer.name.given_name
                 window.location.href = '@Url.Action("CheckoutPaymentConfirmation", "ShoppingCart", new { orderId = @Model.Order.OrderId,
-                                       storeNavigationTitle = ViewContext.RouteData.Values["storeNavigationTitle"], paymentComplete=true
+                                       storeNavigationTitle = ViewContext.RouteData.Values["storeNavigationTitle"], paymentComplete = true
                                    })' + '&amp;' + details.payer.name.given_name
                 // '/fluffys/ShoppingCart/CheckoutPaymentConfirmation?orderId=0&amp;paymentComplete=True&amp;{details.payer.name.given_name}'
            });
         }
 
     }).render('#paypal-button-container');
-</script>
+    </script>
+
+}
+else // If order has been payed
+{
+    <div class="alert alert-info">This order has already been payed!</div>
+}
