@@ -46,11 +46,10 @@ namespace Hedgehog.UI
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
-            services.AddIdentityCore<UserAccount>(
-                    options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentityCore<UserAccount>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
-                    .AddTokenProvider<EmailTokenProvider<UserAccount>>(TokenOptions.DefaultEmailProvider)
+                    .AddTokenProvider("Default", typeof(HedgehogEmailTwoFactorAuthentication<UserAccount>))
                     .AddDefaultUI();
 
             services.AddIdentityCore<CustomerAccount>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -86,8 +85,16 @@ namespace Hedgehog.UI
             });
             // End MediatR related stuff
 
+            builder.RegisterType<HedgehogEmailTwoFactorAuthentication<UserAccount>>()
+                    .As<IUserTwoFactorTokenProvider<UserAccount>>()
+                    .InstancePerLifetimeScope();
+
             builder.RegisterType<HedgehogEmailTwoFactorAuthentication<CustomerAccount>>()
                     .As<IUserTwoFactorTokenProvider<CustomerAccount>>()
+                    .InstancePerLifetimeScope();
+
+            builder.RegisterType<HedgehogEmailTwoFactorAuthentication<HedgehogUserAccount>>()
+                    .As<IUserTwoFactorTokenProvider<HedgehogUserAccount>>()
                     .InstancePerLifetimeScope();
 
             builder.RegisterType<HttpContextAccessor>()
