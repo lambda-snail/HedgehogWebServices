@@ -141,5 +141,23 @@ namespace Hedgehog.UI.Controllers
 
             return View(paymentSummary);
         }
+
+        /// <summary>
+        /// This is the last screen in the checkout process. If the payment was successfull, a message will
+        /// be displayed here. Any errors that may have occured will also be reported on this screen.
+        /// </summary>
+        /// <param name="storeNavigationTitle"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Customer")]
+        [Route("{storeNavigationTitle}/ShoppingCart/CheckoutPaymentConfirmation")]
+        public async Task<IActionResult> CheckoutPaymentConfirmation(string storeNavigationTitle, bool paymentComplete, int orderId, string payer)
+        {
+
+            var paymentConfirmation = new PaymentConfirmationViewModel();
+            paymentConfirmation.OrderId = orderId;
+            paymentConfirmation.PurchaseCompleted = true;
+            
+            return View(paymentConfirmation);
+        }
     }
 }
