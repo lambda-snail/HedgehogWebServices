@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Hedgehog.Core.Application;
+using Hedgehog.UI.IdentityInfrastructure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,7 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<UserAccount> _signInManager;
+        private readonly IUserTwoFactorTokenProvider<UserAccount> _tokenProvider;
         private readonly UserManager<UserAccount> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
@@ -30,12 +32,14 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
             UserManager<UserAccount> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<UserAccount> signInManager,
+            IUserTwoFactorTokenProvider<UserAccount> tokenProvider,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _tokenProvider = tokenProvider;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -87,16 +91,20 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
 
                     _userManager.AddToRoleAsync(user, "User").Wait();
 
-                    var code = "testtoken";//await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    // For some reason it does not work to register the token provider in Startup, so
+                    // it needs to be added here to avoid an exception.
+                    _userManager.RegisterTokenProvider("Default", _tokenProvider);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
