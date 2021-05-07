@@ -34,8 +34,9 @@ namespace Hedgehog.UI.Controllers
         // no such cart exists.
         private async Task<ShoppingCart> GetCurrentShoppingCartOrNew(string storeNavigationTitle)
         {
-            ISession session = HttpContext.Session;
-            string cartJson = session.GetString(_CartKey);
+            //ISession session = HttpContext.Session;
+            //string cartJson = session.GetString(_CartKey);
+            string cartJson = HttpContext.Request.Cookies[_CartKey];
             ShoppingCart cart = null;
             if (!string.IsNullOrEmpty(cartJson))
             {
@@ -56,7 +57,8 @@ namespace Hedgehog.UI.Controllers
         private async Task SaveShoppingCartToSession(ShoppingCart cart)
         {
             string jsonCart = await _mediator.Send(new SerializeShoppingCartRequest { Cart = cart });
-            HttpContext.Session.SetString(_CartKey, jsonCart);
+            //HttpContext.Session.SetString(_CartKey, jsonCart);
+            Response.Cookies.Append(_CartKey, jsonCart);
         }
 
         [Route("{storeNavigationTitle}/ShoppingCart/Index")]

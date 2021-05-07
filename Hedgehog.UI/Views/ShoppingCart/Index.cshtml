@@ -10,7 +10,7 @@
             <th scope="col">#</th>
             <th scope="col">Product Name</th>
             <th scope="col">Amount</th>
-            <th scope="col">Price</th>
+            <th scope="col">Price (USD)</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -31,7 +31,7 @@
                     Product p = await Model.GetProduct(i);
 
                     <text>
-                        <tr>
+                        <tr id="product-@p.ProductId">
                             <th scope="row">@row</th>
                             <td>
                                 <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample-@row" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -43,11 +43,11 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>@i.Amount</td>
-                            <td>@p.Price <text>$</text></td>
+                            <td class="amount">@i.Amount</td>
+                            <td class="price">@p.Price</td>
                             <td>
-                                <button type="button" class="btn btn-secondary">+</button>
-                                <button type="button" class="btn btn-secondary">-</button>
+                                <button onclick="IncreaseAmount(@p.ProductId)" type="button" class="btn btn-secondary">+</button>
+                                <button onclick="DecreaseAmount(@p.ProductId)" type="button" class="btn btn-secondary">-</button>
                             </td>
                         </tr>
                     </text>
@@ -59,7 +59,7 @@
                     <th scope="row"></th>
                     <td></td>
                     <td></td>
-                    <td><p>Total: @await Model.CalculateTotal() $</p></td>
+                    <td id="total">Total: @await Model.CalculateTotal() USD</td>
                     <td><a type="button" class="btn btn-primary"
                                 asp-controller="ShoppingCart"
                                 asp-action="CheckoutAddressForm"
@@ -68,6 +68,74 @@
                 </tr>
             }
         }
-
     </tbody>
 </table>
+
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+<script>
+    function CalculateTotal() {
+        let cart = GetCartFromCookies();
+            
+        var total = 0;
+        cart.Items.forEach(product => {
+            rowProductHtml = document.querySelector("#product-" + product.ProductId);
+            let amount = parseInt(rowProductHtml.querySelector(".amount").innerHTML);
+            let price = parseDouble(rowProductHtml.querySelector(".price").innerHTML);
+
+            if (amount == NaN || proce == NaN) {
+                amount = 0;
+                price = 0;
+            }
+
+            total += amount * price;
+        });
+
+        document.querySelector("#total").innerHTML = "Total: " + total + " USD";
+    }
+
+    // Get cart
+    // Increase amount by one of product with given Id
+    // Update the html
+    // Save the cookie again
+    function IncreaseAmount(productId) {
+        let cart = GetCartFromCookies();
+
+        if (cart != undefined)
+        {
+            cartItem = cart.Items.find(item => item.ProductId == productId);
+            cartItem.Amount = parseInt(cartItem.Amount) + 1;
+
+            let amountHtml = document.querySelector(`#product-${productId} > .amount`);
+            amountHtml.innerHTML = cartItem.Amount;
+
+            SaveCartToCookies(cart);
+        }
+    }
+
+    // Similar to the one above, but also stop
+    // decrease when amount reaches zero.
+    // Remove item when amount reaches zero.
+    function DecreaseAmount(productId) {
+
+    }
+
+    function GetCartFromCookies()
+    {
+        // decodeURI only decodes half of the symbols, at least in MS Edge
+        return JSON.parse(Cookies.get("Cart")
+                .replaceAll("%22", "\"")
+                .replaceAll("%7B", "{")
+                .replaceAll("%7D", "}")
+                .replaceAll("%3A", ":")
+                .replaceAll("%2C", ",")
+                .replaceAll("%5B", "[")
+                .replaceAll("%5D", "]"))
+    }
+
+    function SaveCartToCookies(cart)
+    {
+        Cookies.remove("Cart");
+        Cookies.set("Cart", JSON.stringify(cart));
+    }
+</script>
