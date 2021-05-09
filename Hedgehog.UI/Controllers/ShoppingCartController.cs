@@ -10,6 +10,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Hedgehog.Core.Application;
+using System;
 
 namespace Hedgehog.UI.Controllers
 {
@@ -52,6 +53,14 @@ namespace Hedgehog.UI.Controllers
             }
 
             return cart;
+        }
+
+        /// <summary>
+        /// Clears the shopping cart, i.e. after a completed purchase.
+        /// </summary>
+        private void ClearShoppingCart()
+        {
+            Response.Cookies.Delete(_CartKey);
         }
 
         private async Task SaveShoppingCartToSession(ShoppingCart cart)
@@ -135,7 +144,7 @@ namespace Hedgehog.UI.Controllers
             WebStore store = customer.WebStore;
             Address orderAddress = await _mediator.Send( new DeserializeAddressRequest { Json= TempData["address"] as string } );
 
-            Order order = await _mediator.Send(new CreateOrderRequest { SaveToDatabase = false, Cart = cart, Address = orderAddress, Customer = customer });
+            Order order = await _mediator.Send(new CreateOrderRequest { SaveToDatabase = true, Cart = cart, Address = orderAddress, Customer = customer });
 
             PaymentSummaryViewModel paymentSummary = new();
             paymentSummary.Order = order;
@@ -154,11 +163,25 @@ namespace Hedgehog.UI.Controllers
         [Route("{storeNavigationTitle}/ShoppingCart/CheckoutPaymentConfirmation")]
         public async Task<IActionResult> CheckoutPaymentConfirmation(string storeNavigationTitle, bool paymentComplete, int orderId, string payer)
         {
-
             var paymentConfirmation = new PaymentConfirmationViewModel();
             paymentConfirmation.OrderId = orderId;
             paymentConfirmation.PurchaseCompleted = true;
-            
+
+            if (paymentComplete)
+            {
+                Order order  = await _mediator.Send( new GetOrderByIdRequest { OrderId= orderId } );
+                if (order == null) // If this is true, something is really wrong
+                {
+                    return RedirectToAction("Home", "Error"); // TODO: Add more useful error message specific to failed payments
+                }
+                else
+                {
+                    order.FinalizeOrder();
+                    await _mediator.Send(new AddOrUpdateOrderRequest { Order = order });
+                    ClearShoppingCart();
+                }
+            }
+
             return View(paymentConfirmation);
         }
     }
