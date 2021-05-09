@@ -9,6 +9,6 @@ namespace Hedgehog.Core.Contracts.InfrastructureContracts.Repositories
         /// <summary>
         /// Retreive all orders related to a given user.
         /// </summary>
-        public Task<IEnumerable<Order>> GetOrderByCustomerIdAsync(string userId);
+        public Task<IEnumerable<Order>> GetOrdersByCustomerIdAsync(string customerId);
     }
 }
