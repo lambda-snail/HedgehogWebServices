@@ -21,7 +21,7 @@ namespace Hedgehog.Core.Domain
         /// <returns></returns>
         public bool IsCompletedTransaction()
         {
-            return FinalizedTime == null;
+            return FinalizedTime != null;
         }
 
         public double GetOrderTotal()
@@ -32,6 +32,14 @@ namespace Hedgehog.Core.Domain
                 total += item.Amount * item.ProductPrice;
             }
             return total;
+        }
+
+        /// <summary>
+        /// Marks the order as complete.
+        /// </summary>
+        public void FinalizeOrder()
+        {
+            FinalizedTime = DateTime.Now;
         }
     }
 }
