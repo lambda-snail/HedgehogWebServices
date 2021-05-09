@@ -11,16 +11,16 @@
 
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User)) // If signed in, show link to "my page"
     {
         <li class="nav-item">
             @if (@User.IsInRole("User"))
             {
-                <a class="nav-link text-dark" asp-controller="User" asp-action="Index" title="Manage">Hello @User.Identity.Name!</a>
+                <a class="nav-link text-dark" asp-controller="User" asp-action="Index" title="Manage Account">Hello @User.Identity.Name!</a>
             }
-            else
+            else // Customer
             {
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+                <a class="nav-link text-dark" asp-controller="Customer" asp-action="Index" asp-route-storeNavigationTitle=@storeNavigationTitle title="Manage Account">Hello @User.Identity.Name!</a>
             }
 
         </li>
@@ -41,7 +41,7 @@
         </li>
     }
     else
-    {
+    {   // For registration
         if (string.IsNullOrEmpty(storeNavigationTitle))
         {
             <li class="nav-item">
@@ -55,7 +55,7 @@
             </li>
         }
 
-        @if (string.IsNullOrWhiteSpace(storeNavigationTitle))
+        @if (string.IsNullOrWhiteSpace(storeNavigationTitle)) // For login button
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>

@@ -24,6 +24,9 @@ namespace Hedgehog.Core.Domain
             return FinalizedTime != null;
         }
 
+        /// <summary>
+        /// Returns the total of the order. This does not require a trip to the database.
+        /// </summary>
         public double GetOrderTotal()
         {
             double total = 0d;

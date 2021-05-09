@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -42,6 +43,32 @@ namespace Hedgehog.UI.Views.Store
             _roleManager = roleManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+        }
+
+        [Authorize]
+        [Route("{storeNavigationTitle}/Customer/Index")]
+        public IActionResult Index(string storeNavigationTitle)
+        {
+            return View();
+        }
+
+        [Authorize]
+        [Route("{storeNavigationTitle}/Customer/OrderHistory")]
+        public async Task<IActionResult> OrderHistory(string storeNavigationTitle)
+        {
+            string customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            IEnumerable<Order> orders =
+                await _mediator.Send(new GetAllOrdersByCustomerIdRequest { CustomerId= customerId });
+
+            return View(orders);
+        }
+
+        [Authorize]
+        [Route("{storeNavigationTitle}/Customer/OrderDetails")]
+        public async Task<IActionResult> OrderDetails(string storeNavigationTitle, int orderId)
+        {
+            Order order = await _mediator.Send( new GetOrderByIdRequest { OrderId= orderId } );
+            return View(order);
         }
 
         [AllowAnonymous]

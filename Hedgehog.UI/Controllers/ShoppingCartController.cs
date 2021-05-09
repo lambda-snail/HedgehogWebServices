@@ -142,15 +142,21 @@ namespace Hedgehog.UI.Controllers
             ShoppingCart cart = await GetCurrentShoppingCartOrNew(storeNavigationTitle);
             CustomerAccount customer = await _mediator.Send(new GetCustomerWithNavigationPropertiesRequest { UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) });
             WebStore store = customer.WebStore;
-            Address orderAddress = await _mediator.Send( new DeserializeAddressRequest { Json= TempData["address"] as string } );
+            Address orderAddress = await _mediator.Send(new DeserializeAddressRequest { Json = TempData["address"] as string });
 
-            Order order = await _mediator.Send(new CreateOrderRequest { SaveToDatabase = true, Cart = cart, Address = orderAddress, Customer = customer });
+            if (cart != null) 
+            {
+                Order order = await _mediator.Send(new CreateOrderRequest { SaveToDatabase = true, Cart = cart, Address = orderAddress, Customer = customer });
+                PaymentSummaryViewModel paymentSummary = new();
+                paymentSummary.Order = order;
+                paymentSummary.WebStoreName = store.StoreTitle;
 
-            PaymentSummaryViewModel paymentSummary = new();
-            paymentSummary.Order = order;
-            paymentSummary.WebStoreName = store.StoreTitle;
-
-            return View(paymentSummary);
+                return View(paymentSummary);
+            }
+            else // This means we probably arrived here by the user pressing the back button in browser
+            {
+                return View(null);
+            }
         }
 
         /// <summary>

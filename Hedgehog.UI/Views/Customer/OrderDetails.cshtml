@@ -1,0 +1,10 @@
+﻿@model Order
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">Oops! No order found with that id.</div>
+}
+else
+{
+    <partial name="_OrderDetails" model="@Model" />
+}

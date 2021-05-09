@@ -46,7 +46,7 @@ namespace HedgehogTesting.UnitTests.Mocks
 
             Mock<IOrderRepository> repo = new();
 
-            repo.Setup(r => r.GetOrderByCustomerIdAsync(It.IsAny<string>()))
+            repo.Setup(r => r.GetOrdersByCustomerIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(
                     (string userId) => orders.Where(o => o.Customer.Id == userId)
                 );
