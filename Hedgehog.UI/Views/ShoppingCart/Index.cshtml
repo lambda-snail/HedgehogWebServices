@@ -44,10 +44,10 @@
                                 </div>
                             </td>
                             <td class="amount">@i.Amount</td>
-                            <td class="price">@p.Price</td>
+                            <td class="price">@p.Price.ToString("N2")</td>
                             <td>
-                                <button onclick="IncreaseAmount(@p.ProductId)" type="button" class="btn btn-secondary">+</button>
-                                <button onclick="DecreaseAmount(@p.ProductId)" type="button" class="btn btn-secondary">-</button>
+                                <button onclick="ChangeAmount(@p.ProductId, 1)" type="button" class="btn btn-secondary">+</button>
+                                <button onclick="ChangeAmount(@p.ProductId, -1)" type="button" class="btn btn-secondary">-</button>
                             </td>
                         </tr>
                     </text>
@@ -59,12 +59,15 @@
                     <th scope="row"></th>
                     <td></td>
                     <td></td>
-                    <td id="total">Total: @await Model.CalculateTotal() USD</td>
-                    <td><a type="button" class="btn btn-primary"
-                                asp-controller="ShoppingCart"
-                                asp-action="CheckoutAddressForm"
-                                asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])">
-                        Proceed to Checkout</a></td>
+                    <td id="total"></td>
+                    <td>
+                        <a type="button" class="btn btn-primary"
+                           asp-controller="ShoppingCart"
+                           asp-action="CheckoutAddressForm"
+                           asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])">
+                            Proceed to Checkout
+                        </a>
+                    </td>
                 </tr>
             }
         }
@@ -74,6 +77,12 @@
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 
 <script>
+    window.addEventListener("load", function ()
+    {
+        CalculateTotal();
+    });
+
+    // Calculate the total and change the display
     function CalculateTotal() {
         let cart = GetCartFromCookies();
             
@@ -81,43 +90,48 @@
         cart.Items.forEach(product => {
             rowProductHtml = document.querySelector("#product-" + product.ProductId);
             let amount = parseInt(rowProductHtml.querySelector(".amount").innerHTML);
-            let price = parseDouble(rowProductHtml.querySelector(".price").innerHTML);
+            let price = parseFloat(rowProductHtml.querySelector(".price").innerHTML);
 
-            if (amount == NaN || proce == NaN) {
+            if (amount == NaN || price == NaN || amount < 0 || price < 0) {
                 amount = 0;
-                price = 0;
+                price = 0.0;
             }
 
             total += amount * price;
         });
 
-        document.querySelector("#total").innerHTML = "Total: " + total + " USD";
+        document.querySelector("#total").innerHTML = "Total: " + total.toFixed(2) + " USD";
     }
 
     // Get cart
-    // Increase amount by one of product with given Id
+    // Change amount of product with given Id, by "change" (+1 or -1 )
     // Update the html
     // Save the cookie again
-    function IncreaseAmount(productId) {
+    function ChangeAmount(productId, change) {
         let cart = GetCartFromCookies();
 
         if (cart != undefined)
         {
             cartItem = cart.Items.find(item => item.ProductId == productId);
-            cartItem.Amount = parseInt(cartItem.Amount) + 1;
+            cartItem.Amount = parseInt(cartItem.Amount) + change;
+
+            if (cartItem.Amount < 0)
+            {
+                cartItem.Amount = 0;
+                alert("This product will be removed when you proceed to checkout! To undo this action increase the amount again.");
+            }
+
+            if (cartItem.Amount == 0) {
+                alert("This product will be removed when you proceed to checkout! To undo this action increase the amount again.");
+            }
 
             let amountHtml = document.querySelector(`#product-${productId} > .amount`);
             amountHtml.innerHTML = cartItem.Amount;
 
             SaveCartToCookies(cart);
         }
-    }
 
-    // Similar to the one above, but also stop
-    // decrease when amount reaches zero.
-    // Remove item when amount reaches zero.
-    function DecreaseAmount(productId) {
-
+        CalculateTotal();
     }
 
     function GetCartFromCookies()
