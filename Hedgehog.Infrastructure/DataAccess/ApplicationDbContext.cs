@@ -82,6 +82,8 @@ namespace Hedgehog.Infrastructure.DataAccess
                     entityBuilder.Property(a => a.Country).HasColumnType("nvarchar(256)");
                     entityBuilder.Property(a => a.ZipCode).HasColumnType("nvarchar(256)");
                 });
+
+            SeedRoles(modelBuilder);
         }
 
         private void SeedRoles(ModelBuilder modelBuilder)
@@ -97,8 +99,8 @@ namespace Hedgehog.Infrastructure.DataAccess
             modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
-                    Name = "User",
-                    NormalizedName = "USER",
+                    Name = "Customer",
+                    NormalizedName = "Customer",
                     Id = "2"
                 });
         }

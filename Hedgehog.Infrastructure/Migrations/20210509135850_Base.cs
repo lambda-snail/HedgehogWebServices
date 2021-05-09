@@ -8,6 +8,23 @@ namespace Hedgehog.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    AddressId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Receiver = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    StreetAddress = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    ZipCode = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(256)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.AddressId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -40,6 +57,51 @@ namespace Hedgehog.Infrastructure.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FinalizedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ShippingAddressAddressId = table.Column<int>(type: "int", nullable: true),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.OrderId);
+                    table.ForeignKey(
+                        name: "FK_Order_Address_ShippingAddressAddressId",
+                        column: x => x.ShippingAddressAddressId,
+                        principalTable: "Address",
+                        principalColumn: "AddressId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItem",
+                columns: table => new
+                {
+                    OrderItemId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Amount = table.Column<int>(type: "int", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    ProductShortDescription = table.Column<string>(type: "nvarchar(1024)", nullable: true),
+                    ProductPrice = table.Column<double>(type: "float", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItem", x => x.OrderItemId);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Order_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Order",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,6 +172,7 @@ namespace Hedgehog.Infrastructure.Migrations
                     WebStoreId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StoreTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StoreDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NavigationTitle = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -175,6 +238,16 @@ namespace Hedgehog.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "1", "cc3a85c6-5e94-4b5c-8043-c9a24a81ac4d", "User", "USER" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "2", "38c0300a-e38e-4933-ac67-1c7c6e47df9c", "Customer", "Customer" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -220,6 +293,21 @@ namespace Hedgehog.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Order_CustomerId",
+                table: "Order",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Order_ShippingAddressAddressId",
+                table: "Order",
+                column: "ShippingAddressAddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_OrderId",
+                table: "OrderItem",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Product_WebStoreId",
                 table: "Product",
                 column: "WebStoreId");
@@ -237,6 +325,14 @@ namespace Hedgehog.Infrastructure.Migrations
                 column: "UserAccountId",
                 unique: true,
                 filter: "[UserAccountId] IS NOT NULL");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Order_AspNetUsers_CustomerId",
+                table: "Order",
+                column: "CustomerId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserRoles_AspNetUsers_UserId",
@@ -301,10 +397,19 @@ namespace Hedgehog.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "OrderItem");
+
+            migrationBuilder.DropTable(
                 name: "Product");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "Address");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

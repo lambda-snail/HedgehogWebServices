@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hedgehog.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210503112551_Add-Orders")]
-    partial class AddOrders
+    [Migration("20210509135850_Base")]
+    partial class Base
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -163,8 +163,8 @@ namespace Hedgehog.Infrastructure.Migrations
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("ProductPrice")
-                        .HasColumnType("int");
+                    b.Property<double>("ProductPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("ProductShortDescription")
                         .HasColumnType("nvarchar(1024)");
@@ -265,6 +265,22 @@ namespace Hedgehog.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "cc3a85c6-5e94-4b5c-8043-c9a24a81ac4d",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            ConcurrencyStamp = "38c0300a-e38e-4933-ac67-1c7c6e47df9c",
+                            Name = "Customer",
+                            NormalizedName = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
