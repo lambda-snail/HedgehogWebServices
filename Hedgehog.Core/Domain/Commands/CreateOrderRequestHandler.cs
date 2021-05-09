@@ -12,6 +12,8 @@ namespace Hedgehog.Core.Domain.Commands
     /// <summary>
     /// This command handler takes care of everything that is needed to create an order based on a shopping cart
     /// and is the prefferred way to do so.
+    /// 
+    /// Any order items with an amount of 0 will be ignored.
     /// </summary>
     public class CreateOrderRequestHandler : IRequestHandler<CreateOrderRequest, Order>
     {
@@ -39,14 +41,17 @@ namespace Hedgehog.Core.Domain.Commands
             
             foreach(var item in request.Cart.Items)
             {
-                Product product = await _mediator.Send(new GetSingleProductFromStoreRequest { StoreId = request.Customer.WebStore.WebStoreId, ProductId=item.ProductId });
-                OrderItem orderItem = new();
-                orderItem.Amount = item.Amount;
-                orderItem.ProductName = product.ProductName;
-                orderItem.ProductPrice = product.Price;
-                orderItem.ProductShortDescription = product.ShortDescription;
+                if (item.Amount > 0)
+                {
+                    Product product = await _mediator.Send(new GetSingleProductFromStoreRequest { StoreId = request.Customer.WebStore.WebStoreId, ProductId = item.ProductId });
+                    OrderItem orderItem = new();
+                    orderItem.Amount = item.Amount;
+                    orderItem.ProductName = product.ProductName;
+                    orderItem.ProductPrice = product.Price;
+                    orderItem.ProductShortDescription = product.ShortDescription;
 
-                order.OrderItems.Add(orderItem);
+                    order.OrderItems.Add(orderItem);
+                }
             }
 
             if(request.SaveToDatabase)
