@@ -46,9 +46,9 @@ namespace Hedgehog.UI.Controllers
             WebStore store = await _mediator.Send(new GetStoreFromUserIdRequest { UserId = userId });
 
             WebStoreViewModel storeVm = new();
-            storeVm.StoreTitle = store.StoreTitle;
-            storeVm.NavigationTitle = store.NavigationTitle;
-            storeVm.StoreDescription = store.StoreDescription;
+            storeVm.StoreTitle = store?.StoreTitle ?? "";
+            storeVm.NavigationTitle = store?.NavigationTitle ?? "";
+            storeVm.StoreDescription = store?.StoreDescription ?? "";
 
             return View(storeVm);
         }
