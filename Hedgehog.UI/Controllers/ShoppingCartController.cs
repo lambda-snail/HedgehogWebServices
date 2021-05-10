@@ -78,18 +78,49 @@ namespace Hedgehog.UI.Controllers
             return View(cart);
         }
 
+        /// <summary>
+        /// Add an item to the cart. The code also check so that the item is not in a different store
+        /// than the cart. If so the customer will be presented with a message and offered to clear the cart.
+        /// </summary>
+        /// <returns></returns>
         [Route("{storeNavigationTitle}/ShoppingCart/AddToCart")]
         public async Task<IActionResult> AddToCart(string storeNavigationTitle, int productId)
         {
             ShoppingCart cart = await GetCurrentShoppingCartOrNew(storeNavigationTitle);
-            cart.AddToCart(productId);
-            await SaveShoppingCartToSession(cart);
-            return View();
+            WebStore cartStore = await _mediator.Send(new GetStoreFromStoreIdRequest { StoreId = cart.StoreId });
+
+            if (storeNavigationTitle == cartStore.NavigationTitle)
+            {
+                cart.AddToCart(productId);
+                await SaveShoppingCartToSession(cart);
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("AddToCartError", new { storeNavigationTitle=storeNavigationTitle });
+            }
         }
 
-        // If the customer is entering the shopping cart from another store, we will redirect to
-        // the corect store. The way the system is designed, it doesn't matter where the customer
-        // enters the checkout process, but this behavior could potentially be confusing to customers.
+        /// <summary>
+        /// This page is displayed if the customer tries to add an item from a different store.
+        /// </summary>
+        /// <param name="storeNavigationTitle"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        [Route("{storeNavigationTitle}/ShoppingCart/AddToCartError")]
+        public async Task<IActionResult> AddToCartError(string storeNavigationTitle)
+        {
+            ShoppingCart cart = await GetCurrentShoppingCartOrNew(storeNavigationTitle);
+            WebStore cartStore = await _mediator.Send(new GetStoreFromStoreIdRequest { StoreId = cart.StoreId });
+
+            return View(cartStore);
+        }
+
+        /// <summary>
+        /// If the customer is entering the shopping cart from another store, we will redirect to
+        /// the corect store. The way the system is designed, it doesn't matter where the customer
+        /// enters the checkout process, but this behavior could potentially be confusing to customers.
+        /// <returns></returns>
         [Authorize(Roles = "Customer")]
         [Route("{storeNavigationTitle}/ShoppingCart/CheckoutAddressForm")]
         public async Task<IActionResult> CheckoutAddressForm(string storeNavigationTitle)

@@ -1,0 +1,26 @@
+﻿@model WebStore
+
+<div class="alert alert-warning">Error: Wrong store or cart!</div>
+
+<p>It appears you are trying to add items to the cart, but the cart contains items from another store.
+    To resolve this you can either:</p>
+
+<ul>
+    <li><a href="#" id="clear-cart">Clear the cart</a></li>
+    <li><a href="/@(ViewContext.RouteData.Values["storeNavigationTitle"])" >Go to the cart's store</a></li>
+    <li><a href="javascript:void(0);" onclick="history.go(-1);">Go back</a></li>
+</ul>
+
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+<script type='text/javascript'>
+    window.addEventListener("load", function () {
+        document.querySelector("#clear-cart").addEventListener("click", ClearCart);
+    });
+
+    function ClearCart()
+    {
+        Cookies.remove("Cart");
+    }
+
+</script>
