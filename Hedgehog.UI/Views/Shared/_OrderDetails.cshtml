@@ -1,0 +1,42 @@
+﻿@model Order
+
+<h3>Order details</h3>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int row = 1;
+            foreach (var item in Model.OrderItems)
+            {
+
+                <text>
+                    <tr>
+                        <th scope="row">@row</th>
+                        <td>@item.ProductName</td>
+                        <td>@item.Amount</td>
+                        <td>@item.ProductPrice</td>
+                    </tr>
+                </text>
+
+                row++;
+            }
+        }
+</table>
+
+<h3>Shipping address</h3>
+
+<address>
+    @Model.ShippingAddress.Receiver<br />
+    @Model.ShippingAddress.StreetAddress<br />
+    @Model.ShippingAddress.ZipCode, @Model.ShippingAddress.City<br />
+    @Model.ShippingAddress.Country<br />
+</address>

@@ -74,7 +74,8 @@ namespace Hedgehog.UI.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = "/User/Index"; //??= Url.Content("~/");
+            if(string.IsNullOrEmpty(returnUrl))
+                returnUrl = "/User/Index"; //??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         

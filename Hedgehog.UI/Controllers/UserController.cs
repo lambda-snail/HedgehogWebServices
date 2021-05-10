@@ -17,9 +17,9 @@ namespace Hedgehog.UI.Controllers
     public class UserController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly UserManager<HedgehogUserAccount> _userManager;
+        private readonly UserManager<UserAccount> _userManager;
 
-        public UserController(IMediator mediator, UserManager<HedgehogUserAccount> userManager)
+        public UserController(IMediator mediator, UserManager<UserAccount> userManager)
         {
             _mediator = mediator;
             _userManager = userManager;
@@ -30,7 +30,7 @@ namespace Hedgehog.UI.Controllers
             return User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Index")]
         public async Task<IActionResult> Index()
         {
@@ -38,45 +38,41 @@ namespace Hedgehog.UI.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Store")]
         public async Task<IActionResult> EditStoreForm()
         {
             var userId = GetIdLoggedInUser();
             WebStore store = await _mediator.Send(new GetStoreFromUserIdRequest { UserId = userId });
 
-            return View(store);
+            WebStoreViewModel storeVm = new();
+            storeVm.StoreTitle = store?.StoreTitle ?? "";
+            storeVm.NavigationTitle = store?.NavigationTitle ?? "";
+            storeVm.StoreDescription = store?.StoreDescription ?? "";
+
+            return View(storeVm);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Store")]
         [HttpPost]
-        public async  Task<IActionResult> EditStoreForm(WebStore store)
+        public async  Task<IActionResult> EditStoreForm(WebStoreViewModel storeVm)
         {
-            if(string.IsNullOrWhiteSpace(store.StoreTitle))
-            {
-                ModelState.AddModelError("", "You must have a title for your store!");
-            }
-            if (string.IsNullOrWhiteSpace(store.NavigationTitle))
-            {
-                ModelState.AddModelError("", "You must have a navigation title for your store!");
-            }
-
             if(ModelState.IsValid)
             {
-                string userId = store.HedgehogUserAccountForeignKey = GetIdLoggedInUser();
+                string userId = GetIdLoggedInUser();
                 WebStore storeToSave = await _mediator.Send(new GetStoreFromUserIdRequest { UserId = userId });
 
                 if(storeToSave == null) // Newly registered user
                 {
-                    storeToSave = store;
-                    storeToSave.HedgehogUserAccountForeignKey = userId;
+
+                    storeToSave = new();
+                    storeToSave.UserAccount = await _userManager.GetUserAsync(User);
                 }
-                else
-                {
-                    storeToSave.NavigationTitle = store.NavigationTitle;
-                    storeToSave.StoreTitle = store.StoreTitle;
-                }
+                
+                storeToSave.NavigationTitle = storeVm.NavigationTitle;
+                storeToSave.StoreTitle = storeVm.StoreTitle;
+                storeToSave.StoreDescription = storeVm.StoreDescription;
 
                 await _mediator.Send( new AddOrUpdateStoreRequest { Store = storeToSave } );
 
@@ -85,18 +81,18 @@ namespace Hedgehog.UI.Controllers
             }
             else
             {
-                return View(store);
+                return View(storeVm);
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Products")]
         public async Task<IActionResult> AddProductForm()
         {
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Products")]
         [HttpPost]
         public async Task<IActionResult> AddProductForm(ProductViewModel product)
@@ -133,7 +129,7 @@ namespace Hedgehog.UI.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [Route("/User/Confirmed")]
         public IActionResult ChangesSaved()
         {

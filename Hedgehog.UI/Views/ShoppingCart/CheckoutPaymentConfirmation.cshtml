@@ -1,0 +1,17 @@
+﻿@model PaymentConfirmationViewModel
+
+<p>OrderId: @Model.OrderId.</p>
+
+
+@if (Model.PurchaseCompleted)
+{
+    <div class="alert alert-success">
+        @Model.OnPurchaseCompleteMessage
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        @Model.OnPurchaseNotCompleteMessage
+    </div>
+}

@@ -13,7 +13,7 @@ namespace Hedgehog.Infrastructure.DataAccess
 
         public async Task<WebStore> GetWebStoreFromUser(string guid)
         {
-            return await _database.Set<WebStore>().Include(store => store.Owner).FirstOrDefaultAsync(store => store.Owner.Id == guid);
+            return await _database.Set<WebStore>().Include(store => store.UserAccount).FirstOrDefaultAsync(store => store.UserAccount.Id == guid);
         }
 
         public async Task<WebStore> GetWebStoreFromNavigationTitle(string navigationTitle)

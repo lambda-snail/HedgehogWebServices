@@ -1,12 +1,16 @@
 ﻿@model ShoppingCart
 
+<h2>Shopping Cart Summary</h2>
+
+<p>Please review the contents of the cart before proceeding to checkout.</p>
+
 <table class="table">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
             <th scope="col">Product Name</th>
             <th scope="col">Amount</th>
-            <th scope="col">Price</th>
+            <th scope="col">Price (USD)</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -15,7 +19,9 @@
         @{
             if (Model?.Items == null || Model.Items.Count == 0)
             {
-                <text><p>There are no items in your cart ... yet!</p></text>
+                <text>
+                    <p>There are no items in your cart ... yet!</p>
+                </text>
             }
             else
             {
@@ -24,24 +30,126 @@
                 {
                     Product p = await Model.GetProduct(i);
 
-
                     <text>
-                            <tr>
-                                <th scope="row">@row</th>
-                                <td>@p.ProductName</td>
-                                <td>@i.Amount</td>
-                                <td>@p.Price <text>$</text></td>
-                                <td>
-                                    <button type="button" class="btn btn-secondary">+</button>
-                                    <button type="button" class="btn btn-secondary">-</button>
-                                </td>
-                            </tr>
+                        <tr id="product-@p.ProductId">
+                            <th scope="row">@row</th>
+                            <td>
+                                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample-@row" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    @p.ProductName
+                                </a>
+                                <div class="collapse" id="collapseExample-@row">
+                                    <div class="card card-body">
+                                        @p.ShortDescription
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="amount">@i.Amount</td>
+                            <td class="price">@p.Price.ToString("N2")</td>
+                            <td>
+                                <button onclick="ChangeAmount(@p.ProductId, 1)" type="button" class="btn btn-secondary">+</button>
+                                <button onclick="ChangeAmount(@p.ProductId, -1)" type="button" class="btn btn-secondary">-</button>
+                            </td>
+                        </tr>
                     </text>
 
                     row++;
                 }
+
+                <tr>
+                    <th scope="row"></th>
+                    <td></td>
+                    <td></td>
+                    <td id="total"></td>
+                    <td>
+                        <a type="button" class="btn btn-primary"
+                           asp-controller="ShoppingCart"
+                           asp-action="CheckoutAddressForm"
+                           asp-route-storeNavigationTitle="@(ViewContext.RouteData.Values["storeNavigationTitle"])">
+                            Proceed to Checkout
+                        </a>
+                    </td>
+                </tr>
             }
         }
-
     </tbody>
 </table>
+
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+<script>
+    window.addEventListener("load", function ()
+    {
+        CalculateTotal();
+    });
+
+    // Calculate the total and change the display
+    function CalculateTotal() {
+        let cart = GetCartFromCookies();
+            
+        var total = 0;
+        cart.Items.forEach(product => {
+            rowProductHtml = document.querySelector("#product-" + product.ProductId);
+            let amount = parseInt(rowProductHtml.querySelector(".amount").innerHTML);
+            let price = parseFloat(rowProductHtml.querySelector(".price").innerHTML);
+
+            if (amount == NaN || price == NaN || amount < 0 || price < 0) {
+                amount = 0;
+                price = 0.0;
+            }
+
+            total += amount * price;
+        });
+
+        document.querySelector("#total").innerHTML = "Total: " + total.toFixed(2) + " USD";
+    }
+
+    // Get cart
+    // Change amount of product with given Id, by "change" (+1 or -1 )
+    // Update the html
+    // Save the cookie again
+    function ChangeAmount(productId, change) {
+        let cart = GetCartFromCookies();
+
+        if (cart != undefined)
+        {
+            cartItem = cart.Items.find(item => item.ProductId == productId);
+            cartItem.Amount = parseInt(cartItem.Amount) + change;
+
+            if (cartItem.Amount < 0)
+            {
+                cartItem.Amount = 0;
+                alert("This product will be removed when you proceed to checkout! To undo this action increase the amount again.");
+            }
+
+            if (cartItem.Amount == 0) {
+                alert("This product will be removed when you proceed to checkout! To undo this action increase the amount again.");
+            }
+
+            let amountHtml = document.querySelector(`#product-${productId} > .amount`);
+            amountHtml.innerHTML = cartItem.Amount;
+
+            SaveCartToCookies(cart);
+        }
+
+        CalculateTotal();
+    }
+
+    function GetCartFromCookies()
+    {
+        // decodeURI only decodes half of the symbols, at least in MS Edge
+        return JSON.parse(Cookies.get("Cart")
+                .replaceAll("%22", "\"")
+                .replaceAll("%7B", "{")
+                .replaceAll("%7D", "}")
+                .replaceAll("%3A", ":")
+                .replaceAll("%2C", ",")
+                .replaceAll("%5B", "[")
+                .replaceAll("%5D", "]"))
+    }
+
+    function SaveCartToCookies(cart)
+    {
+        Cookies.remove("Cart");
+        Cookies.set("Cart", JSON.stringify(cart));
+    }
+</script>

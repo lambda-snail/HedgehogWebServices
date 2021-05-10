@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Order>
+
+<h2>Order History</h2>
+
+<p>
+    This is a list of your current orders along with their payment status.
+    Please use the order id when communicating with the support staff.
+</p>
+
+<p>Use the "details" button to see a more detailed overview of a particular order.</p>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Order Id</th>
+            <th scope="col">Total (USD)</th>
+            <th scope="col">Placed</th>
+            <th scope="col">Finalized</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int row = 1;
+            foreach (Order o in Model)
+            {
+                <tr>
+                    <th scope="row">@row</th>
+                    <td>@o.OrderId</td>
+                    <td>@o.GetOrderTotal()</td>
+                    <td>@o.CreatedTime</td>
+                    @if (o.FinalizedTime != null)
+                    {
+                        <td>@o.FinalizedTime</td>
+                    }
+                    else
+                    {
+                        <td>Not Payed</td>
+                    }
+                    <td><a href="@Url.Action("OrderDetails", "Customer", new { storeNavigationTitle = ViewContext.RouteData.Values["storeNavigationTitle"], orderId= o.OrderId })" class="btn btn-secondary">Details</a></td>
+                </tr>
+
+                row++;
+            }
+        }
+</table>
+

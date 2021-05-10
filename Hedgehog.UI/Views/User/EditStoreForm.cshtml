@@ -1,4 +1,4 @@
-﻿@model WebStore
+﻿@model WebStoreViewModel
 
 <container>
     <form asp-action="EditStoreForm">
@@ -13,6 +13,13 @@
                 <input asp-for="NavigationTitle" class="form-control" aria-describedby="navigation-title">
                 <small class="form-text text-muted">The url used to find your store.</small>
             </div>
+        </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="StoreDescription"></label>
+                    <textarea asp-for="StoreDescription" class="form-control" id="exampleFormControlTextarea1" aria-describedby="description" rows="3"></textarea>
+                    <small class="form-text text-muted">A text of any length that will be displayed on the store main page.</small>
+                </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>

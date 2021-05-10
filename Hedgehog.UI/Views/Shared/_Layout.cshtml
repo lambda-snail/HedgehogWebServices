@@ -21,9 +21,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        
+                        @await Component.InvokeAsync("ShoppingCartSummary")
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -38,8 +38,13 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - Hedgehog.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - Hedgehog Cloud Services - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+            <!-- PayPal Logo --><a href="https://www.paypal.com/webapps/mpp/paypal-popup" title="How PayPal Works" onclick="javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;"><img src="https://www.paypalobjects.com/digitalassets/c/website/marketing/na/us/logo-center/15_nowaccepting_blue_badge.jpg" border="0" alt="Secured by PayPal"></a><!-- PayPal Logo -->
         </div>
+
+        
+
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
