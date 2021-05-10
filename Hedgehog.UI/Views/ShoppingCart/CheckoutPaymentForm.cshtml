@@ -35,11 +35,11 @@
         // This function captures the funds from the transaction.
         onApprove: function (data, actions) {
             return actions.order.capture().then(function (details) {
-                // This function shows a transaction success message to your buyer.
+
                 let payer = details.payer.name.given_name
+                
                 window.location.href = '@Url.Action("CheckoutPaymentConfirmation", "ShoppingCart", new { orderId = @Model.Order.OrderId,
-                                       storeNavigationTitle = ViewContext.RouteData.Values["storeNavigationTitle"], paymentComplete = true
-                                   })' + '&amp;' + details.payer.name.given_name
+                                       storeNavigationTitle = ViewContext.RouteData.Values["storeNavigationTitle"] })'
                 // '/fluffys/ShoppingCart/CheckoutPaymentConfirmation?orderId=0&amp;paymentComplete=True&amp;{details.payer.name.given_name}'
            });
         }

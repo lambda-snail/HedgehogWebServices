@@ -95,15 +95,15 @@ namespace Hedgehog.UI.Controllers
         public async Task<IActionResult> CheckoutAddressForm(string storeNavigationTitle)
         {
             CustomerAccount customer = await _mediator.Send(new GetCustomerWithNavigationPropertiesRequest { UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) });
-            if(customer.WebStore.NavigationTitle == storeNavigationTitle)
+            if (customer.WebStore.NavigationTitle == storeNavigationTitle)
             {
                 return View();
             }
             else
             {
-                return RedirectToAction("CheckoutAddressForm", "ShoppingCart", new { storeNavigationTitle= customer.WebStore.NavigationTitle });
+                return RedirectToAction("CheckoutAddressForm", "ShoppingCart", new { storeNavigationTitle = customer.WebStore.NavigationTitle });
             }
-            
+
         }
 
         [HttpPost]
@@ -111,11 +111,11 @@ namespace Hedgehog.UI.Controllers
         [Route("{storeNavigationTitle}/ShoppingCart/CheckoutAddressForm")]
         public async Task<IActionResult> CheckoutAddressForm(string storeNavigationTitle, AddressViewModel addressVm)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 // We need to serialize the address since the default serializer will complain otherwise
-                TempData["address"] = await _mediator.Send(new SerializeAddressRequest { Address= GetAddressFromVM(addressVm) });
-                return RedirectToAction("CheckoutPaymentForm", new { storeNavigationTitle= storeNavigationTitle });
+                TempData["address"] = await _mediator.Send(new SerializeAddressRequest { Address = GetAddressFromVM(addressVm) });
+                return RedirectToAction("CheckoutPaymentForm", new { storeNavigationTitle = storeNavigationTitle });
             }
 
             return View(addressVm);
@@ -144,7 +144,7 @@ namespace Hedgehog.UI.Controllers
             WebStore store = customer.WebStore;
             Address orderAddress = await _mediator.Send(new DeserializeAddressRequest { Json = TempData["address"] as string });
 
-            if (cart != null) 
+            if (cart != null)
             {
                 Order order = await _mediator.Send(new CreateOrderRequest { SaveToDatabase = true, Cart = cart, Address = orderAddress, Customer = customer });
                 PaymentSummaryViewModel paymentSummary = new();
@@ -160,35 +160,37 @@ namespace Hedgehog.UI.Controllers
         }
 
         /// <summary>
-        /// This is the last screen in the checkout process. If the payment was successfull, a message will
-        /// be displayed here. Any errors that may have occured will also be reported on this screen.
+        /// This is the last screen in the checkout process. If the payment was completed this is the
+        /// action that gets called. If the payment failed then CheckoutPaymentOnFail will handle the recovery.
         /// </summary>
         /// <param name="storeNavigationTitle"></param>
         /// <returns></returns>
         [Authorize(Roles = "Customer")]
         [Route("{storeNavigationTitle}/ShoppingCart/CheckoutPaymentConfirmation")]
-        public async Task<IActionResult> CheckoutPaymentConfirmation(string storeNavigationTitle, bool paymentComplete, int orderId, string payer)
+        public async Task<IActionResult> CheckoutPaymentConfirmation(string storeNavigationTitle, bool paymentComplete, int orderId)
         {
             var paymentConfirmation = new PaymentConfirmationViewModel();
             paymentConfirmation.OrderId = orderId;
             paymentConfirmation.PurchaseCompleted = true;
 
-            if (paymentComplete)
+            Order order = await _mediator.Send(new GetOrderByIdRequest { OrderId = orderId });
+            if (order == null) // If this is true, something is really wrong
             {
-                Order order  = await _mediator.Send( new GetOrderByIdRequest { OrderId= orderId } );
-                if (order == null) // If this is true, something is really wrong
-                {
-                    return RedirectToAction("Home", "Error"); // TODO: Add more useful error message specific to failed payments
-                }
-                else
-                {
-                    order.FinalizeOrder();
-                    await _mediator.Send(new AddOrUpdateOrderRequest { Order = order });
-                    ClearShoppingCart();
-                }
+                return RedirectToAction("Home", "Error"); // TODO: Add more useful error message specific to failed payments
+            }
+            else
+            {
+                order.FinalizeOrder();
+                await _mediator.Send(new AddOrUpdateOrderRequest { Order = order });
+                ClearShoppingCart();
             }
 
             return View(paymentConfirmation);
+        }
+
+        public async Task<IActionResult> CheckoutPaymentOnFail(string storeNavigationTitle)
+        {
+            return View();
         }
     }
 }
