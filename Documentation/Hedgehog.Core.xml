@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hedgehog.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Hedgehog.Core.Application.GuardClause">
+            <summary>
+            Provides a fluent API for checking certain conditions on objects, such as if the reference is null.
+            
+            Usage:
+              GuardClause.Check.EnsureNotNull(myObject, "ErrorMsg")
+              GuardClause.Check.EnsureNotNull(myObject, "ErrorMsg").EnsureNotZero(myObject.IntProperty);
+            
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Application.GuardClause.NotNull(System.Object,System.String)">
+            <summary>
+            Ensures that the specified object is not null. If the object is null an ArgumentNullException
+            will be thrown with the specified message.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Application.GuardClause.NotZero(System.Int32,System.String)">
+            <summary>
+            Ensures that the specified object is not 0. If the object is null an ArgumentNullException
+            will be thrown with the specified message.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Application.Requests.GetCustomerWithNavigationPropertiesRequest">
+            <summary>
+            The built-in UserManager does not load navigation properties. This class makes a request
+            to ensure that these are loaded, and should be used when needed. If not needed, the normal
+            way to get user information via UserManager is preferred.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Application.UserTypes.CustomerAccountClaimsPrincipalFactory">
+            <summary>
+            Adds application specific claims to the Customer class. The following claim is added:
+            "WebStoreNavigationTitle" - the navigation string of the associated web store.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Application.HedgehogUserAccount">
+            <summary>
+            Base class for user accounts in the application. 
+            Customers and users of the service will have a link to the related web store.
+            Administrators will not be related to a store.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Contracts.InfrastructureContracts.ICustomerAccountManagerExtensions">
+            <summary>
+            The built-in UserManager does not load navigation properties. This class provides a method
+            to load users including navigation properties, when they are needed. If not needed, the normal
+            way to get user information via UserManager is preferred.
+            
+            It is intended to be injected into request handlers that need it.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IAsyncGenericRepository`2">
+            <summary>
+            Defines generic async CRUD operations.
+            </summary>
+            <typeparam name="E">A type that exists in the DbContext of the application.</typeparam>
+            <typeparam name="IdType">The type of the primary key for T.</typeparam>
+        </member>
+        <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IAsyncGenericRepository`2.GetPagedAsync(System.Int32,System.Int32,System.Func{`0,System.Boolean})">
+            <summary>
+            Retreives paged results from the database, with an optional filter specfied.
+            </summary>
+            <param name="predicate">An optional filter applied before querying the database.</param>
+            /// <param name="page">Pages are indexed starting with 1 as the first page.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IOrderRepository.GetOrdersByCustomerIdAsync(System.String)">
+            <summary>
+            Retreive all orders related to a given user.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IProductRepository.GetProductsFromWebStoreIdAsync(System.Int32)">
+            <summary>
+            Returns a collection of all products associated with a given store.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IProductRepository.GetProductsFromWebStorePagedAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns a paged collection of products associated with a given store.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IWebStoreRepository">
+            <summary>
+            An interface with special methods for interacting with the WebStore classes in the database.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IWebStoreRepository.GetWebStoreFromUser(System.String)">
+            <summary>
+            Returns the WebStore owned by the specified user.
+            </summary>
+            <param name="guid">The id of the user who owns the store.</param>
+        </member>
+        <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IWebStoreRepository.GetWebStoreFromNavigationTitle(System.String)">
+            <summary>
+            Finds the WebStore that is associated with the specified navigation name (i.e. the part of the url that is used to identify the web store in the UI).
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Address">
+            <summary>
+            A stub implementation for a generic address for demo purposes. It is designed to look like an average address 
+            that you would find in most countries, but without the details.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Commands.AddOrUpdateOrderRequestHandler">
+            <summary>
+            Adds a new Order to the system or updates an existing. The new or updated order is returned after execution.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Commands.CreateOrderRequestHandler">
+            <summary>
+            This command handler takes care of everything that is needed to create an order based on a shopping cart
+            and is the prefferred way to do so.
+            
+            Any order items with an amount of 0 will be ignored.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Commands.GetAllOrdersByCustomerIdRequestHandler">
+            <summary>
+            Retreives all orders in the DB for a given customer.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Commands.GetStoreFromNavigationTitleRequestHandler">
+            <summary>
+            Handles a request for a WebStore based on the navigation title - the part of the URL in the UI that
+            identifies a store.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Domain.Order.IsCompletedTransaction">
+            <summary>
+            Returns true if and only if the transaction associated with this order is completed.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Hedgehog.Core.Domain.Order.GetOrderTotal">
+            <summary>
+            Returns the total of the order. This does not require a trip to the database.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Domain.Order.FinalizeOrder">
+            <summary>
+            Marks the order as complete.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.OrderItem">
+            <summary>
+            Represents a product that is part of an order. There is no reference to a Product object
+            here, instead the OrderItem will store some properties of the Product from which it derives.
+            This is so that changes in a Product in the Db will not have strange effects on already completed
+            orders.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Product">
+            <summary>
+            Represents a product in a web store.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Requests.AddOrUpdateStoreRequest">
+            <summary>
+            A request to add or update a web store in the system.
+            </summary>
+        </member>
+        <member name="P:Hedgehog.Core.Domain.Requests.CreateOrderRequest.SaveToDatabase">
+            <summary>
+            Should the resulting order be saved to the database when created?
+            Defaults to false.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.ShoppingCart">
+            <summary>
+            A simple shopping cart that is designed to be small and thus should be relatively cheap to instantiate
+            as needed during the handling of a request.
+            </summary>
+        </member>
+        <member name="P:Hedgehog.Core.Domain.ShoppingCart.StoreId">
+            <summary>
+            The Id of the store is saved to prevent shopping carts accidentally being transferred between
+            sessions of different customers.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Domain.ShoppingCart.CalculateTotal">
+            <summary>
+            Calculates the total cost of all items in the shopping cart. This call will connect
+            to the database.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.Core.Domain.ShoppingCart.AddToCart(System.Int32,System.Int32)">
+            <summary>
+            Add an amount of the given product. If a product with the given id does not exist in the cart, it will be
+            added with the specified amount.
+            </summary>
+            <exception cref="T:System.ArgumentException">If amount is less than or equal to 0.</exception>
+            <param name="amount">Defaults to 1.</param>
+        </member>
+        <member name="M:Hedgehog.Core.Domain.ShoppingCart.RemoveFromCart(System.Int32,System.Int32)">
+            <summary>
+            Removes a given quantity of the specified product from the shopping cart. If a product with the given id 
+            does not exist in the cart, the method will exit silently.
+            </summary>
+            <exception cref="T:System.ArgumentException">If amount is less than or equal to 0.</exception>
+            <param name="amount">Defaults to 1.</param>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.ShoppingCartItem">
+            <summary>
+            An item in a shopping cart consisting of a product id and an amount. The class is designed to
+            be lightweight to allow for efficient serialization and deserialization, as well as storage in
+            the browser session.
+            
+            As only product id is stored, the product object must be retreived from the database before processing.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.WebStore">
+            <summary>
+            Represents the web store woned by a ServiceUser.
+            </summary>
+        </member>
+        <member name="P:Hedgehog.Core.Domain.WebStore.StoreDescription">
+            <summary>
+            A description of the store, displayed to customers.
+            </summary>
+        </member>
+        <member name="P:Hedgehog.Core.Domain.WebStore.NavigationTitle">
+            <summary>
+            Used when navigating to a store. Must consist of only alphanumerics and no spaces.
+            </summary>
+        </member>
+        <member name="P:Hedgehog.Core.Domain.WebStore.UserAccountId">
+            <summary>
+            The owner of the web store.
+            </summary>
+        </member>
+    </members>
+</doc>

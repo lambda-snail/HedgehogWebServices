@@ -32,6 +32,34 @@
         }
 </table>
 
+<h3>Payment Status</h3>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Order Placed</th>
+            <th scope="col">Order Finalized</th>
+            <th scope="col">Order Total (USD)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.CreatedTime</td>
+
+            @if (Model.FinalizedTime == null)
+            {
+                <td>Not Payed</td>
+            }
+            else
+            { 
+                <td>@Model.FinalizedTime.ToString()</td>
+            }
+
+            <td>@Model.GetOrderTotal()</td>
+        </tr>
+    </tbody>
+</table>
+
 <h3>Shipping address</h3>
 
 <address>

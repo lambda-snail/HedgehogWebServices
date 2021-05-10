@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hedgehog.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="M:Hedgehog.Infrastructure.DataAccess.OrderRepository.GetByIdAsync(System.Int32)">
+            <summary>
+            Override base class method to allow inclusion of all navigation properties.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Hedgehog.Infrastructure.Services.AutofacContractResolver">
+            <summary>
+            Allows serialization and deserialization of objects that have dependences which are resolved
+            using Autofac.
+            
+            Source: https://www.newtonsoft.com/json/help/html/DeserializeWithDependencyInjection.htm
+            </summary>
+        </member>
+    </members>
+</doc>
