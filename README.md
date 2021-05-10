@@ -122,9 +122,9 @@ Unfortunately, to try this out you will need to use some kind of development env
 
 There are two roles in the service:
 
-1. Store owners
+1. Store owners (called "Users" in the system)
 
-2. Customers
+2. Customers ("Customers")
 
 * A web store is accessed through an url of the form "base/storeName".
 
