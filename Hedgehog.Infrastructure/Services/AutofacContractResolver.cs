@@ -4,6 +4,10 @@ using Autofac.Core.Activators.Reflection;
 using Newtonsoft.Json.Serialization;
 using System;
 
+/// <summary>
+/// The Services within the Infrastructure namespace contain details that are neccessary for application
+/// execution, but do not fit in the Domain or the DataAccess namespace.
+/// </summary>
 namespace Hedgehog.Infrastructure.Services
 {
     /// <summary>

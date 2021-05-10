@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 
+/// <summary>
+/// The DataAccess namespace contains everything that pertains to persistence: Entity Framework references and various repositories.
+/// </summary>
 namespace Hedgehog.Infrastructure.DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext<HedgehogUserAccount>

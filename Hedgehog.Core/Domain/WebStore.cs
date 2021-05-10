@@ -1,6 +1,9 @@
 ﻿using Hedgehog.Core.Application;
 using System.Collections.Generic;
 
+/// <summary>
+/// The Domain namespace contains all classes that shoulder the main work of the application, such as WebStore, Order etc.
+/// </summary>
 namespace Hedgehog.Core.Domain
 {
     /// <summary>

@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+/// <summary>
+/// Domain.Commands contain the implementations of all request handlers that work with domain objects.
+/// </summary>
 namespace Hedgehog.Core.Domain.Commands
 {
     /// <summary>
