@@ -4,7 +4,22 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+    <PropertyGroup>
+		<GenerateDocumentationFile></GenerateDocumentationFile>
+		<DefaultDocumentationRemoveFileExtensionFromLinks></DefaultDocumentationRemoveFileExtensionFromLinks>
+		<DefaultDocumentationFolder>$(SolutionDir)Documentation\Core</DefaultDocumentationFolder>
+	</PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DocumentationFile>C:\programming\lexicon\HedgehogWebService\Documentation\Hedgehog.Core.xml</DocumentationFile>
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+		
   <ItemGroup>
+    <PackageReference Include="DefaultDocumentation" Version="0.7.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="7.2.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.5" />
   </ItemGroup>

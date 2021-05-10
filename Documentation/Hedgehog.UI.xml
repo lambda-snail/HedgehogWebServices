@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hedgehog.UI</name>
+    </assembly>
+    <members>
+        <member name="T:Hedgehog.UI.Components.ShoppingCartSummary">
+            <summary>
+            Adapted from Gill Cleerens course. Displays a clickable shopping cart icon if there are items in the shopping cart.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.UI.Views.Store.CustomerController">
+            <summary>
+            A class for handling login, registration and settings pages of customers.
+            
+            Note that the login and registration are adapted from the scaffolded Razor pages. This was done in orde
+            to learn how they work, thus there is some duplication going on.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.UI.Controllers.HomeController">
+            <summary>
+            The controlelr that manages the default screen presented when navigating to the base url.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.UI.Controllers.ShoppingCartController.ClearShoppingCart">
+            <summary>
+            Clears the shopping cart, i.e. after a completed purchase.
+            </summary>
+        </member>
+        <member name="M:Hedgehog.UI.Controllers.ShoppingCartController.CheckoutPaymentConfirmation(System.String,System.Boolean,System.Int32)">
+            <summary>
+            This is the last screen in the checkout process. If the payment was completed this is the
+            action that gets called. If the payment failed then CheckoutPaymentOnFail will handle the recovery.
+            </summary>
+            <param name="storeNavigationTitle"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Hedgehog.UI.Controllers.StoreController">
+            <summary>
+            This controller handles the presentation of a web store.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.UI.Controllers.UserController">
+            <summary>
+            Handles logic related to store owners changing their data.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.UI.IdentityInfrastructure.HedgehogEmailTwoFactorAuthentication`1">
+            <summary>
+            Generates two-factor authentication tokens. The tokens are functions of the userid, the email and also
+            the purpose of the token.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.UI.ViewModels.PaymentSummaryViewModel">
+            <summary>
+            Contains all the data needed to properly render the payment screen to the user.
+            </summary>
+        </member>
+    </members>
+</doc>
