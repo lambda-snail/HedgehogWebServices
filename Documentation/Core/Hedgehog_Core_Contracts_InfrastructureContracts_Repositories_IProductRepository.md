@@ -1,6 +1,7 @@
 #### [Hedgehog.Core](index.md 'index')
 ### [Hedgehog.Core.Contracts.InfrastructureContracts.Repositories](Hedgehog_Core_Contracts_InfrastructureContracts_Repositories.md 'Hedgehog.Core.Contracts.InfrastructureContracts.Repositories')
 ## IProductRepository Interface
+An interface that allows more specific operations on the Product database, compared to the generic repository.  
 ```csharp
 public interface IProductRepository :
 Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IAsyncGenericRepository<Hedgehog.Core.Domain.Product, int>

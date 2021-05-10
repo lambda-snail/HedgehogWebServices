@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+/// <summary>
+/// This namespace contains all interfaces that define how data access works.
+/// </summary>
 namespace Hedgehog.Core.Contracts.InfrastructureContracts.Repositories
 {
     /// <summary>

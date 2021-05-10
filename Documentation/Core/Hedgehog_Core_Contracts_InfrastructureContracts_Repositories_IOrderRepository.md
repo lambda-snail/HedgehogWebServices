@@ -1,6 +1,7 @@
 #### [Hedgehog.Core](index.md 'index')
 ### [Hedgehog.Core.Contracts.InfrastructureContracts.Repositories](Hedgehog_Core_Contracts_InfrastructureContracts_Repositories.md 'Hedgehog.Core.Contracts.InfrastructureContracts.Repositories')
 ## IOrderRepository Interface
+An interface that allows more specific operations on the Order database, compared to the generic repository.  
 ```csharp
 public interface IOrderRepository :
 Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IAsyncGenericRepository<Hedgehog.Core.Domain.Order, int>

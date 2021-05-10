@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Hedgehog.Core.Contracts.InfrastructureContracts.Repositories
 {
+    /// <summary>
+    /// An interface that allows more specific operations on the Product database, compared to the generic repository.
+    /// </summary>
     public interface IProductRepository : IAsyncGenericRepository<Product, int>
     {
         /// <summary>
