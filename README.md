@@ -76,6 +76,13 @@ It is an implementation of a simple cloud service, that lets you register your o
 * A little bit of JavaScript
 * Lots of coffee :)
 
+Also the following libraries/frameworks were used:
+
+* MediatR
+* Autofac
+* Newtonsoft
+* PayPal SDK
+
 ### What I learned
 
 I have learned, among other things:
