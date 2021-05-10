@@ -27,7 +27,7 @@ A simple cloud service for creating online stores
   <p align="center">
     A simple cloud service for creating online stores
     <br />
-    <a href="https://github.com/lambda-snail/HedgehogWebServices"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/lambda-snail/HedgehogWebServices/wiki"><strong>Explore the wiki »</strong></a>
     <br />
     <br />
     <a href="https://github.com/lambda-snail/HedgehogWebServices/issues">Report Bug</a>
