@@ -70,9 +70,19 @@
             /// <param name="page">Pages are indexed starting with 1 as the first page.</param>
             <returns></returns>
         </member>
+        <member name="T:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IOrderRepository">
+            <summary>
+            An interface that allows more specific operations on the Order database, compared to the generic repository.
+            </summary>
+        </member>
         <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IOrderRepository.GetOrdersByCustomerIdAsync(System.String)">
             <summary>
             Retreive all orders related to a given user.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IProductRepository">
+            <summary>
+            An interface that allows more specific operations on the Product database, compared to the generic repository.
             </summary>
         </member>
         <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IProductRepository.GetProductsFromWebStoreIdAsync(System.Int32)">
@@ -87,7 +97,7 @@
         </member>
         <member name="T:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IWebStoreRepository">
             <summary>
-            An interface with special methods for interacting with the WebStore classes in the database.
+            An interface that allows more specific operations on the WebStore database, compared to the generic repository.
             </summary>
         </member>
         <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IWebStoreRepository.GetWebStoreFromUser(System.String)">
@@ -158,6 +168,11 @@
         <member name="T:Hedgehog.Core.Domain.Product">
             <summary>
             Represents a product in a web store.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Requests.AddOrUpdateOrderRequest">
+            <summary>
+            The Domain.Requests namespace contains all request objects that are tied to request handlers in Domain.Command.
             </summary>
         </member>
         <member name="T:Hedgehog.Core.Domain.Requests.AddOrUpdateStoreRequest">

@@ -1,7 +1,7 @@
 #### [Hedgehog.Core](index.md 'index')
 ### [Hedgehog.Core.Contracts.InfrastructureContracts.Repositories](Hedgehog_Core_Contracts_InfrastructureContracts_Repositories.md 'Hedgehog.Core.Contracts.InfrastructureContracts.Repositories')
 ## IWebStoreRepository Interface
-An interface with special methods for interacting with the WebStore classes in the database.  
+An interface that allows more specific operations on the WebStore database, compared to the generic repository.  
 ```csharp
 public interface IWebStoreRepository :
 Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IAsyncGenericRepository<Hedgehog.Core.Domain.WebStore, int>

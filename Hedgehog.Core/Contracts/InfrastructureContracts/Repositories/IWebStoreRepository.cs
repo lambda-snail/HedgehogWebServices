@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Hedgehog.Core.Contracts.InfrastructureContracts.Repositories
 {
     /// <summary>
-    /// An interface with special methods for interacting with the WebStore classes in the database.
+    /// An interface that allows more specific operations on the WebStore database, compared to the generic repository.
     /// </summary>
     public interface IWebStoreRepository : IAsyncGenericRepository<WebStore, int>
     {
