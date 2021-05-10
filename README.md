@@ -94,6 +94,7 @@ I have learned, among other things:
   * Naming is also difficult. I named my user categories "Customer" and "User" - the latter of which caused som major confusion in the code and I regret it dearly. I guess the lesson is to not use general names to name something very specific.
 * That having more than one subclass of IdentituUser is a pain.
 * Separating the storage of users and other application data might be a good idea (this should be a natural choice if following SOLID principles).
+* Storing a shopping cart in a cookie sounds like a good idea at first, but the execution of teh idea needs careful consideration of various cases.
 
 
 Of the two weeks, about half of the time has been spent on trying to resolve errors in the framework (mostly Identity).
