@@ -84,6 +84,7 @@ I have learned, among other things:
   * So, no major refactorings the last few days :)
 * To organize a larger project, and use an issue tracking system (Trello) to maintain continuity in the development process.
 * That larger projects really need good naming conventions, otherwise you spend too much time looking for stuff in the folders.
+  * Naming is also difficult. I named my user categories "Customer" and "User" - the latter of which caused som major confusion in the code and I regret it dearly. I guess the lesson is to not use general names to name something very specific.
 * That having more than one subclass of IdentituUser is a pain.
 * Separating the storage of users and other application data might be a good idea (this should be a natural choice if following SOLID principles).
 
@@ -132,6 +133,7 @@ Registering and log in is based on the location from which you press the respect
 
 * The shopping cart can be populated without loggin in. In this case, proceeding to checkout will prompt you to log in before payment.
 
+* You will need a PayPal sandbox account to complete the payment of an order.
 
 <!-- ROADMAP -->
 ## Roadmap
