@@ -188,9 +188,9 @@ namespace Hedgehog.UI.Controllers
             return View(paymentConfirmation);
         }
 
-        public async Task<IActionResult> CheckoutPaymentOnFail(string storeNavigationTitle)
+        public async Task<IActionResult> CheckoutPaymentOnFail(string storeNavigationTitle, string errorMesssage)
         {
-            return View();
+            return View(errorMesssage);
         }
     }
 }
