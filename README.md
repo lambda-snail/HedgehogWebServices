@@ -146,7 +146,7 @@ Registering and log in is based on the location from which you press the respect
 <!-- ROADMAP -->
 ## Roadmap
 
-Although the project is still very bare bones, I have decided to not continue development after the project is completed.
+Although the project is still very bare bones, it can easily be extended.
 
 To see how the development process was organized, please visit the [Trello board](https://trello.com/b/f00NL1fp/hedgehog-service-roadmap).
 
