@@ -25,17 +25,34 @@ namespace Hedgehog.UI.Controllers
         public async Task<IActionResult> Index(string storeNavigationTitle)
         {
             WebStore store =  await _mediator.Send( new GetStoreFromNavigationTitleRequest { NavigationTitle = storeNavigationTitle } );
-            
-            if(store == null)
+
+            if (store == null)
             {
                 return NotFound();
             }
-            
-            IEnumerable<Product> products = await _mediator.Send( new GetProductsFromStoreRequest { StoreId = store.WebStoreId } );
+
+            SearchViewModel searcVm = new();
+            searcVm.SearchResults = await _mediator.Send( new GetProductsFromStoreRequest { StoreId = store.WebStoreId } );
+            searcVm.SearchString = "";
+
             ViewBag.Message = store.StoreTitle;
             ViewBag.StoreDescription = store.StoreDescription ?? "No description added by the owner yet.";
-            ViewBag.NumItems = products.Count();
-            return View(products);
+            ViewBag.NumItems = "There are " + searcVm.SearchResults.Count() + "items in the store.";
+            return View(searcVm);
+        }
+
+        [HttpPost]
+        [Route("{storeNavigationTitle}/Store/Index")]
+        public async Task<IActionResult> Index(string storeNavigationTitle, SearchViewModel searcVm)
+        {
+            WebStore store = await _mediator.Send(new GetStoreFromNavigationTitleRequest { NavigationTitle = storeNavigationTitle });
+
+            searcVm.SearchResults = await _mediator.Send(new SearchWebStoreRequest { StoreId = store.WebStoreId, SearchString = searcVm.SearchString });
+            ViewBag.Message = store.StoreTitle;
+            ViewBag.StoreDescription = store.StoreDescription ?? "No description added by the owner yet.";
+            ViewBag.NumItems = "Search found " + searcVm.SearchResults.Count() + " items";
+
+            return View(searcVm);
         }
 
         [Route("{storeNavigationTitle}/Store/Details")]

@@ -28,5 +28,17 @@ namespace Hedgehog.Infrastructure.DataAccess
                                   .Skip((page-1)*pageSize).Take(pageSize)
                                   .AsNoTracking().ToListAsync();
         }
+
+        public async Task<IEnumerable<Product>> SearchProductsFromWebStoreAsync(int storeId, string searchString)
+        {
+            return await _database.Set<Product>().Include(product => product.WebStore)
+                                  .Where(
+                                    product => product.WebStoreId == storeId 
+                                    && (product.ProductName.Contains(searchString) 
+                                        || product.ShortDescription.Contains(searchString) 
+                                        || product.LongDescription.Contains(searchString)
+                                       )
+                                  ).AsNoTracking().ToListAsync();
+        }
     }
 }

@@ -13,9 +13,16 @@ namespace Hedgehog.Core.Contracts.InfrastructureContracts.Repositories
         /// Returns a collection of all products associated with a given store.
         /// </summary>
         Task<IEnumerable<Product>> GetProductsFromWebStoreIdAsync(int storeId);
+        
         /// <summary>
         /// Returns a paged collection of products associated with a given store.
         /// </summary>
         Task<IEnumerable<Product>> GetProductsFromWebStorePagedAsync(int storeId, int page, int pageSize);
+
+        /// <summary>
+        /// Returns a subset of all products in a given web store.
+        /// </summary>
+        /// <param name="searchString">The search string will be matched against the product title, short and long descriptions.</param>
+        Task<IEnumerable<Product>> SearchProductsFromWebStoreAsync(int storeId, string searchString);
     }
 }
