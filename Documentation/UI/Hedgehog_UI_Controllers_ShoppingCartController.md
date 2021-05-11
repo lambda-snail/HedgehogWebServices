@@ -9,6 +9,17 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 ### Methods
 
 ***
+[AddToCart(string, int)](Hedgehog_UI_Controllers_ShoppingCartController_AddToCart(string_int).md 'Hedgehog.UI.Controllers.ShoppingCartController.AddToCart(string, int)')
+
+Add an item to the cart. The code also check so that the item is not in a different store  
+than the cart. If so the customer will be presented with a message and offered to clear the cart.  
+
+***
+[AddToCartError(string)](Hedgehog_UI_Controllers_ShoppingCartController_AddToCartError(string).md 'Hedgehog.UI.Controllers.ShoppingCartController.AddToCartError(string)')
+
+This page is displayed if the customer tries to add an item from a different store.  
+
+***
 [CheckoutPaymentConfirmation(string, bool, int)](Hedgehog_UI_Controllers_ShoppingCartController_CheckoutPaymentConfirmation(string_bool_int).md 'Hedgehog.UI.Controllers.ShoppingCartController.CheckoutPaymentConfirmation(string, bool, int)')
 
 This is the last screen in the checkout process. If the payment was completed this is the  

@@ -27,6 +27,22 @@
             Clears the shopping cart, i.e. after a completed purchase.
             </summary>
         </member>
+        <member name="M:Hedgehog.UI.Controllers.ShoppingCartController.AddToCart(System.String,System.Int32)">
+            <summary>
+            Add an item to the cart. The code also check so that the item is not in a different store
+            than the cart. If so the customer will be presented with a message and offered to clear the cart.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Hedgehog.UI.Controllers.ShoppingCartController.AddToCartError(System.String)">
+            <summary>
+            This page is displayed if the customer tries to add an item from a different store.
+            </summary>
+            <param name="storeNavigationTitle"></param>
+            <param name="productId"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Hedgehog.UI.Controllers.ShoppingCartController.CheckoutAddressForm(System.String)" -->
         <member name="M:Hedgehog.UI.Controllers.ShoppingCartController.CheckoutPaymentConfirmation(System.String,System.Boolean,System.Int32)">
             <summary>
             This is the last screen in the checkout process. If the payment was completed this is the

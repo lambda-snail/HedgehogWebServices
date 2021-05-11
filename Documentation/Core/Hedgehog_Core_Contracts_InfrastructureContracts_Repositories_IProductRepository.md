@@ -19,3 +19,8 @@ Returns a collection of all products associated with a given store.
 [GetProductsFromWebStorePagedAsync(int, int, int)](Hedgehog_Core_Contracts_InfrastructureContracts_Repositories_IProductRepository_GetProductsFromWebStorePagedAsync(int_int_int).md 'Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IProductRepository.GetProductsFromWebStorePagedAsync(int, int, int)')
 
 Returns a paged collection of products associated with a given store.  
+
+***
+[SearchProductsFromWebStoreAsync(int, string)](Hedgehog_Core_Contracts_InfrastructureContracts_Repositories_IProductRepository_SearchProductsFromWebStoreAsync(int_string).md 'Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IProductRepository.SearchProductsFromWebStoreAsync(int, string)')
+
+Returns a subset of all products in a given web store.  

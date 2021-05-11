@@ -95,6 +95,12 @@
             Returns a paged collection of products associated with a given store.
             </summary>
         </member>
+        <member name="M:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IProductRepository.SearchProductsFromWebStoreAsync(System.Int32,System.String)">
+            <summary>
+            Returns a subset of all products in a given web store.
+            </summary>
+            <param name="searchString">The search string will be matched against the product title, short and long descriptions.</param>
+        </member>
         <member name="T:Hedgehog.Core.Contracts.InfrastructureContracts.Repositories.IWebStoreRepository">
             <summary>
             An interface that allows more specific operations on the WebStore database, compared to the generic repository.
@@ -184,6 +190,11 @@
             <summary>
             Should the resulting order be saved to the database when created?
             Defaults to false.
+            </summary>
+        </member>
+        <member name="T:Hedgehog.Core.Domain.Requests.SearchWebStoreRequest">
+            <summary>
+            Search a given web store for products with the given string in their description or title.
             </summary>
         </member>
         <member name="T:Hedgehog.Core.Domain.ShoppingCart">
