@@ -15,3 +15,8 @@ A request to add or update a web store in the system.
 ***
 [CreateOrderRequest](Hedgehog_Core_Domain_Requests_CreateOrderRequest.md 'Hedgehog.Core.Domain.Requests.CreateOrderRequest')
 
+
+***
+[SearchWebStoreRequest](Hedgehog_Core_Domain_Requests_SearchWebStoreRequest.md 'Hedgehog.Core.Domain.Requests.SearchWebStoreRequest')
+
+Search a given web store for products with the given string in their description or title.  
